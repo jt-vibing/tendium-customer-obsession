@@ -1507,8 +1507,9 @@
 
     /* ---- Phone: scrollable, spacious sides ---- */
     @media (max-width: 768px) {
-      html, body { overflow: auto; height: auto; }
-      .deck { height: auto; overflow-y: visible; }
+      html { height: auto; overflow-x: hidden; overflow-y: auto; }
+      body  { height: auto; overflow-x: hidden; overflow-y: auto; }
+      .deck { height: auto; min-height: 0; width: 100%; overflow: visible; }
       .slide {
         position: relative;
         inset: auto;
@@ -1777,7 +1778,7 @@
       <h1 class="slide-title">The numbers that matter</h1>
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-card__value accent">100M SEK</div>
+          <div class="metric-card__value error">100M SEK</div>
           <div class="metric-card__label">New ARR Target</div>
           <div class="metric-card__detail">Current: 42M SEK. Requires ~1,770 new paying companies + expansion.</div>
         </div>
@@ -2048,7 +2049,7 @@
       <div class="split-slide">
         <div class="split-slide__left">
           <div class="slide-badge">Who Feels This</div>
-          <h1 class="slide-title">Many questions per team.<br>No fast answers today.</h1>
+          <h1 class="slide-title">Many questions per team. No fast answers today.</h1>
         </div>
         <div class="split-slide__right">
           <div class="persona-grid">
@@ -2418,19 +2419,27 @@
         else if (e.key === 'End') { show(total - 1); }
       });
 
-      // Click to advance
+      // Click to advance (desktop only — disabled on touch devices to allow scrolling)
+      var isMobile = function () { return window.innerWidth <= 768; };
       document.getElementById('deck').addEventListener('click', function (e) {
+        if (isMobile()) return;
         if (e.clientX > window.innerWidth / 2) show(current + 1);
         else show(current - 1);
       });
 
-      // Touch swipe
+      // Touch swipe — only navigate when horizontal movement dominates vertical
       var touchX = 0;
-      document.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; });
+      var touchY = 0;
+      document.addEventListener('touchstart', function (e) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+      });
       document.addEventListener('touchend', function (e) {
-        var diff = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(diff) > 50) {
-          if (diff < 0) show(current + 1);
+        var dx = e.changedTouches[0].clientX - touchX;
+        var dy = e.changedTouches[0].clientY - touchY;
+        // Only swipe-navigate when horizontal movement is dominant and significant
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 2) {
+          if (dx < 0) show(current + 1);
           else show(current - 1);
         }
       });
