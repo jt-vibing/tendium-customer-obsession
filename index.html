@@ -1571,15 +1571,15 @@
       .blockquote__attr { font-size: 11px; }
 
       /* Mess — allow headline wrap on mobile */
-      .slide-title[style*="white-space"] { white-space: normal !important; font-size: 28px !important; }
+      .slide-title[style*="white-space"] { white-space: normal !important; font-size: 48px !important; }
 
-      /* Mess — 2 col */
+      /* Mess — single col, scrollable */
       .mess-layout { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
       .mess-group { padding: 12px; }
-      .mess-group__label { font-size: 9px; margin-bottom: 8px; }
-      .mess-tool { font-size: 12px; padding: 4px 0; }
-      .mess-footer { padding: 12px; }
-      .mess-footer__text { font-size: 12px; }
+      .mess-group__label { font-size: 9px; margin-bottom: 6px; }
+      .mess-tool { font-size: 13px; padding: 3px 0; }
+      .mess-footer { padding: 12px; grid-column: 1 / -1; }
+      .mess-footer__text { font-size: 13px; }
 
       /* Who Feels This — 2x2 */
       .persona-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
@@ -1595,18 +1595,18 @@
       .fracture__title { font-size: 15px; }
       .fracture__desc { font-size: 13px; }
 
-      /* Solution — single column */
-      .solution-pillars { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
-      .pillar { padding: 20px 16px; text-align: left; display: flex; align-items: center; gap: 16px; }
-      .pillar__icon { margin: 0; flex-shrink: 0; }
-      .pillar__name { font-size: 17px; }
-      .pillar__solves { font-size: 10px; }
-      .pillar__desc { font-size: 12px; }
+      /* Solution — stacked full-width cards */
+      .solution-pillars { grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
+      .pillar { padding: 20px; text-align: left; display: block; }
+      .pillar__icon { font-size: 28px; margin-bottom: 8px; }
+      .pillar__name { font-size: 22px; font-weight: 700; }
+      .pillar__solves { font-size: 12px; margin-top: 4px; }
+      .pillar__desc { font-size: 15px; margin-top: 8px; line-height: 1.5; }
       .pillar__connects { display: none; }
-      .solution-equation { flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-      .solution-equation__part { font-size: 12px; }
-      .solution-equation__op { font-size: 16px; }
-      .solution-equation__result { font-size: 13px; padding: 6px 14px; }
+      .solution-equation { flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+      .solution-equation__part { font-size: 14px; }
+      .solution-equation__op { font-size: 18px; }
+      .solution-equation__result { font-size: 15px; padding: 8px 16px; }
 
       /* Speed / Decision — horizontal cards */
       .speed-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
@@ -1656,7 +1656,7 @@
       .slide-title--lg { font-size: 44px; }
 
       .split-slide__left .slide-title { font-size: 40px; }
-      .slide-title[style*="white-space"] { font-size: 40px !important; }
+      .slide-title[style*="white-space"] { white-space: normal !important; font-size: 40px !important; }
 
       .people-grid { grid-template-columns: repeat(3, 1fr); }
       .mess-layout { grid-template-columns: 1fr; }
@@ -2208,7 +2208,7 @@
       <div class="slide-badge">Definition of Done</div>
       <h1 class="slide-title">Success looks like this</h1>
       <div class="success-box">
-        <div class="success-box__label">By March 6, 2026</div>
+        <div class="success-box__label">By March 16, 2026</div>
         <div class="success-box__text">Sales, CS, and Leadership independently ask and get answers to take action on &mdash; with the same unified data. No more conflicting versions of truth.</div>
       </div>
       <p class="slide-body" style="margin-top: 32px; color: var(--text-tertiary);">The test: if Hugo doesn&rsquo;t need his Monday spreadsheet anymore, we won.</p>
