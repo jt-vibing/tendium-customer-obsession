@@ -153,12 +153,37 @@
       pointer-events: none;
     }
 
+    /* ---- Radial Split Layout ---- */
+    .radial-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 40px;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .radial-layout__text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .radial-layout__visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
     /* ---- Radial Hub-Spoke (bold) ---- */
     .radial {
       position: relative;
       width: 600px;
       height: 600px;
-      margin: 20px auto 0;
+      margin: 0 auto;
+      transform: scale(0.85);
+      transform-origin: center center;
     }
 
     .radial__connectors {
@@ -1457,6 +1482,7 @@
       .elephant-img img { max-width: 360px; }
 
       /* Radial: hide SVG, show mobile list */
+      .radial-layout { grid-template-columns: 1fr; gap: 20px; }
       .radial { display: none; }
       .radial-mobile { display: flex !important; }
 
@@ -1805,8 +1831,13 @@
 
     <!-- Slide 3: Multiple Versions of Truth -->
     <div class="slide" style="padding: 40px 60px;">
-      <div class="slide-badge">Multiple Versions of Truth</div>
-      <h1 class="slide-title">Same Customer,<br>Different Perspectives</h1>
+      <div class="radial-layout">
+        <div class="radial-layout__text">
+          <div class="slide-badge">Multiple Versions of Truth</div>
+          <h1 class="slide-title">Same Customer,<br>Different Perspectives</h1>
+          <p class="slide-body">7 teams each see a different slice. No one has the full picture.</p>
+        </div>
+        <div class="radial-layout__visual">
       <div class="radial">
         <svg class="radial__connectors" viewBox="0 0 600 600">
           <circle cx="300" cy="300" r="200"/>
@@ -1864,6 +1895,8 @@
         <div class="radial-mobile__card"><span class="radial-mobile__name">Marketing</span><span class="radial-mobile__sees">Signup attribution, MQL&rarr;Deal</span></div>
         <div class="radial-mobile__card"><span class="radial-mobile__name">Commercial Ops</span><span class="radial-mobile__sees">BOWTIE funnel, pipeline quality</span></div>
         <div class="radial-mobile__card"><span class="radial-mobile__name">RevOps</span><span class="radial-mobile__sees">ARR, subscriptions, churn, billing</span></div>
+      </div>
+        </div>
       </div>
     </div>
 
