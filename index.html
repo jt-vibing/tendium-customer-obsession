@@ -1350,56 +1350,86 @@
       flex-shrink: 0;
     }
 
-    /* ---- Milestones ---- */
-    .milestones {
+    /* ---- Roadmap Timeline ---- */
+    .roadmap {
       display: flex;
       flex-direction: column;
-      margin-top: 36px;
+      margin-top: 32px;
     }
 
-    .milestone {
+    .roadmap-phase {
       display: flex;
-      align-items: flex-start;
-      gap: 28px;
-      padding: 22px 0;
-      border-bottom: 1px solid var(--border);
+      align-items: stretch;
+      gap: 24px;
     }
 
-    .milestone:last-child { border-bottom: none; }
-
-    .milestone__num {
-      font-size: 48px;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--text-tertiary);
-      opacity: 0.25;
-      min-width: 64px;
-      letter-spacing: -0.04em;
+    .roadmap-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 20px;
+      flex-shrink: 0;
     }
 
-    .milestone--done .milestone__num {
-      color: var(--success);
-      opacity: 0.6;
+    .roadmap-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--base-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 1;
     }
 
-    .milestone--current .milestone__num {
-      color: var(--accent);
-      opacity: 1;
+    .roadmap-dot svg {
+      width: 11px;
+      height: 11px;
+      stroke: #fff;
+      stroke-width: 2.5;
+      fill: none;
     }
 
-    .milestone__body {
+    .roadmap-line {
+      width: 2px;
       flex: 1;
-      padding-top: 4px;
+      background: var(--border);
     }
 
-    .milestone__header {
+    .roadmap-phase:last-child .roadmap-line { display: none; }
+
+    .roadmap-phase--done .roadmap-dot {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .roadmap-phase--done .roadmap-line {
+      background: var(--success);
+    }
+
+    .roadmap-phase--current .roadmap-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
+    }
+
+    .roadmap-content {
+      flex: 1;
+      padding-bottom: 20px;
+    }
+
+    .roadmap-phase:last-child .roadmap-content { padding-bottom: 0; }
+
+    .roadmap-header {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 2px;
     }
 
-    .milestone__week {
+    .roadmap-week {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -1407,7 +1437,7 @@
       color: var(--text-tertiary);
     }
 
-    .milestone__status {
+    .roadmap-status {
       font-size: 9px;
       font-weight: 700;
       text-transform: uppercase;
@@ -1416,31 +1446,32 @@
       border-radius: 99px;
     }
 
-    .milestone__status--done {
+    .roadmap-status--done {
       color: var(--success-text);
       background: var(--success-subtle);
     }
 
-    .milestone__status--current {
+    .roadmap-status--current {
       color: var(--accent-text);
       background: var(--accent-subtle);
     }
 
-    .milestone__title {
-      font-size: 22px;
+    .roadmap-title {
+      font-size: 20px;
       font-weight: 700;
       color: var(--text-primary);
       line-height: 1.3;
     }
 
-    .milestone--upcoming .milestone__title {
-      color: var(--text-secondary);
-    }
-
-    .milestone__desc {
+    .roadmap-desc {
       font-size: 14px;
       color: var(--text-tertiary);
-      margin-top: 4px;
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    .roadmap-phase--upcoming .roadmap-title {
+      color: var(--text-secondary);
     }
 
     /* ---- Appendix Divider ---- */
@@ -2235,57 +2266,71 @@
     <div class="slide">
       <div class="slide-badge">Timeline</div>
       <h1 class="slide-title">6 weeks to one truth</h1>
-      <div class="milestones">
-        <div class="milestone milestone--done">
-          <div class="milestone__num">01</div>
-          <div class="milestone__body">
-            <div class="milestone__header">
-              <span class="milestone__week">Week 1</span>
-              <span class="milestone__status milestone__status--done">Complete</span>
+      <div class="roadmap">
+        <div class="roadmap-phase roadmap-phase--done">
+          <div class="roadmap-node">
+            <div class="roadmap-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+            <div class="roadmap-line"></div>
+          </div>
+          <div class="roadmap-content">
+            <div class="roadmap-header">
+              <span class="roadmap-week">Week 1</span>
+              <span class="roadmap-status roadmap-status--done">Complete</span>
             </div>
-            <div class="milestone__title">Define foundation</div>
-            <div class="milestone__desc">Problem defined. Stakeholders aligned. Tech spec locked. Prototype scaffolded.</div>
+            <div class="roadmap-title">Define foundation</div>
+            <div class="roadmap-desc">Problem defined. Stakeholders aligned. Tech spec locked. Prototype scaffolded.</div>
           </div>
         </div>
-        <div class="milestone milestone--current">
-          <div class="milestone__num">02</div>
-          <div class="milestone__body">
-            <div class="milestone__header">
-              <span class="milestone__week">Week 2</span>
-              <span class="milestone__status milestone__status--current">This week</span>
+        <div class="roadmap-phase roadmap-phase--current">
+          <div class="roadmap-node">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-line"></div>
+          </div>
+          <div class="roadmap-content">
+            <div class="roadmap-header">
+              <span class="roadmap-week">Week 2</span>
+              <span class="roadmap-status roadmap-status--current">This week</span>
             </div>
-            <div class="milestone__title">Map glossary &amp; customer journey</div>
-            <div class="milestone__desc">Shared definitions live. AARRR lifecycle mapped: Acquire &rarr; Activate &rarr; Retain &rarr; Revenue &rarr; Referral.</div>
+            <div class="roadmap-title">Map glossary &amp; customer journey</div>
+            <div class="roadmap-desc">Shared definitions live. AARRR lifecycle mapped: Acquire &rarr; Activate &rarr; Retain &rarr; Revenue &rarr; Referral.</div>
           </div>
         </div>
-        <div class="milestone milestone--upcoming">
-          <div class="milestone__num">03</div>
-          <div class="milestone__body">
-            <div class="milestone__header">
-              <span class="milestone__week">Week 3</span>
+        <div class="roadmap-phase roadmap-phase--upcoming">
+          <div class="roadmap-node">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-line"></div>
+          </div>
+          <div class="roadmap-content">
+            <div class="roadmap-header">
+              <span class="roadmap-week">Week 3</span>
             </div>
-            <div class="milestone__title">Connect the data</div>
-            <div class="milestone__desc">Younium + PostHog + Procurement Data connected. Join key proven across sources.</div>
+            <div class="roadmap-title">Connect the data</div>
+            <div class="roadmap-desc">Younium + PostHog + Procurement Data connected. Join key proven across sources.</div>
           </div>
         </div>
-        <div class="milestone milestone--upcoming">
-          <div class="milestone__num">04</div>
-          <div class="milestone__body">
-            <div class="milestone__header">
-              <span class="milestone__week">Week 4&ndash;5</span>
+        <div class="roadmap-phase roadmap-phase--upcoming">
+          <div class="roadmap-node">
+            <div class="roadmap-dot"></div>
+            <div class="roadmap-line"></div>
+          </div>
+          <div class="roadmap-content">
+            <div class="roadmap-header">
+              <span class="roadmap-week">Week 4&ndash;5</span>
             </div>
-            <div class="milestone__title">Prototype &amp; iterate</div>
-            <div class="milestone__desc">Customer Graph prototype live. Search, profiles, unified view. Iterate with real users.</div>
+            <div class="roadmap-title">Prototype &amp; iterate</div>
+            <div class="roadmap-desc">Customer Graph prototype live. Search, profiles, unified view. Iterate with real users.</div>
           </div>
         </div>
-        <div class="milestone milestone--upcoming">
-          <div class="milestone__num">05</div>
-          <div class="milestone__body">
-            <div class="milestone__header">
-              <span class="milestone__week">Week 6</span>
+        <div class="roadmap-phase roadmap-phase--upcoming">
+          <div class="roadmap-node">
+            <div class="roadmap-dot"></div>
+          </div>
+          <div class="roadmap-content">
+            <div class="roadmap-header">
+              <span class="roadmap-week">Week 6</span>
             </div>
-            <div class="milestone__title">V1 delivery</div>
-            <div class="milestone__desc">7 sources connected. Sales, CS, and Leadership using the same customer truth.</div>
+            <div class="roadmap-title">V1 delivery</div>
+            <div class="roadmap-desc">7 sources connected. Sales, CS, and Leadership using the same customer truth.</div>
           </div>
         </div>
       </div>
