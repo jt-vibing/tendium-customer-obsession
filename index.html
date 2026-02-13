@@ -78,15 +78,15 @@
     /* ---- Typography ---- */
     .slide-badge {
       display: inline-block;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--accent-text);
       background: var(--accent-subtle);
-      padding: 6px 16px;
+      padding: 4px 12px;
       border-radius: 99px;
-      margin-bottom: 28px;
+      margin-bottom: 16px;
       width: fit-content;
     }
 
@@ -95,7 +95,7 @@
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -0.02em;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
 
     .slide-title--lg {
@@ -306,7 +306,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin-top: 36px;
     }
 
     .persona-card {
@@ -460,26 +459,42 @@
       color: var(--error-text);
     }
 
+    /* ---- Split Layout (headline left, content right) ---- */
+    .split-slide {
+      display: grid;
+      grid-template-columns: 0.7fr 1fr;
+      gap: 48px;
+      align-items: start;
+      flex: 1;
+      min-height: 0;
+    }
+    .split-slide__left {
+      position: sticky;
+      top: 0;
+    }
+    .split-slide__left .slide-title {
+      margin-bottom: 16px;
+    }
+
     /* ---- Definition Clash ---- */
     .clashes {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 32px;
+      gap: 12px;
     }
 
     .clash-card {
       background: var(--elevated-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 16px 18px;
     }
 
     .clash-card__term {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--warning-text);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .clash-card__versions {
@@ -501,8 +516,8 @@
 
     .blockquote {
       border-left: 3px solid var(--warning);
-      padding: 20px 24px;
-      margin-top: 32px;
+      padding: 14px 20px;
+      margin-top: 16px;
       background: var(--warning-subtle);
       border-radius: 0 var(--radius) var(--radius) 0;
     }
@@ -1502,8 +1517,8 @@
       }
       .slide[style*="padding"] { padding: 48px 40px !important; padding-bottom: 56px !important; }
 
-      .slide-badge { font-size: 11px; padding: 4px 12px; margin-bottom: 14px; }
-      .slide-title { font-size: 28px; margin-bottom: 10px; }
+      .slide-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 10px; }
+      .slide-title { font-size: 28px; margin-bottom: 8px; }
       .slide-title--lg { font-size: 32px; }
       .slide-subtitle { font-size: 15px; max-width: 100%; }
       .slide-body { font-size: 14px; max-width: 100%; }
@@ -1531,12 +1546,15 @@
       .radial-mobile__name { font-size: 12px; min-width: 80px; }
       .radial-mobile__sees { font-size: 11px; }
 
+      /* Split layout — stack on mobile */
+      .split-slide { grid-template-columns: 1fr; gap: 16px; }
+
       /* Contradictions — 2x2 grid kept */
-      .clashes { gap: 10px; margin-top: 20px; }
-      .clash-card { padding: 14px; }
-      .clash-card__term { font-size: 13px; }
-      .clash-card__ver { font-size: 12px; }
-      .blockquote { padding: 12px 16px; margin-top: 16px; }
+      .clashes { gap: 8px; margin-top: 12px; }
+      .clash-card { padding: 12px; }
+      .clash-card__term { font-size: 12px; margin-bottom: 4px; }
+      .clash-card__ver { font-size: 11px; }
+      .blockquote { padding: 10px 14px; margin-top: 12px; }
       .blockquote__text { font-size: 14px; }
       .blockquote__attr { font-size: 11px; }
 
@@ -1903,46 +1921,52 @@
 
     <!-- Slide 5: Contradictions -->
     <div class="slide">
-      <div class="slide-badge">Contradictions</div>
-      <h1 class="slide-title">Same words.<br>Different definitions.</h1>
-      <div class="clashes">
-        <div class="clash-card">
-          <div class="clash-card__term">&ldquo;Organic leads&rdquo;</div>
-          <div class="clash-card__versions">
-            <div class="clash-card__ver"><strong>Sales:</strong> 20% of pipeline is organic</div>
-            <div class="clash-card__ver"><strong>Marketing:</strong> 5% of pipeline is organic</div>
+      <div class="split-slide">
+        <div class="split-slide__left">
+          <div class="slide-badge">Contradictions</div>
+          <h1 class="slide-title">Same words.<br>Different definitions.</h1>
+          <div class="blockquote">
+            <div class="blockquote__text">&ldquo;Can we have a library of definitions?&rdquo;</div>
+            <div class="blockquote__attr">&mdash; Hugo Jennerholm, Commercial Ops</div>
           </div>
         </div>
-        <div class="clash-card">
-          <div class="clash-card__term">&ldquo;ARR&rdquo;</div>
-          <div class="clash-card__versions">
-            <div class="clash-card__ver">3 different figures reported in the same week &mdash; from Younium, HubSpot, and a spreadsheet</div>
+        <div class="split-slide__right">
+          <div class="clashes">
+            <div class="clash-card">
+              <div class="clash-card__term">&ldquo;Organic leads&rdquo;</div>
+              <div class="clash-card__versions">
+                <div class="clash-card__ver"><strong>Sales:</strong> 20% of pipeline is organic</div>
+                <div class="clash-card__ver"><strong>Marketing:</strong> 5% of pipeline is organic</div>
+              </div>
+            </div>
+            <div class="clash-card">
+              <div class="clash-card__term">&ldquo;ARR&rdquo;</div>
+              <div class="clash-card__versions">
+                <div class="clash-card__ver">3 different figures reported in the same week &mdash; from Younium, HubSpot, and a spreadsheet</div>
+              </div>
+            </div>
+            <div class="clash-card">
+              <div class="clash-card__term">&ldquo;Inbound&rdquo;</div>
+              <div class="clash-card__versions">
+                <div class="clash-card__ver"><strong>Marketing:</strong> website form fill</div>
+                <div class="clash-card__ver"><strong>Sales:</strong> any deal we didn&rsquo;t cold-call</div>
+              </div>
+            </div>
+            <div class="clash-card">
+              <div class="clash-card__term">&ldquo;Active customer&rdquo;</div>
+              <div class="clash-card__versions">
+                <div class="clash-card__ver">No shared definition. Paying? Logged in? Has a subscription? All three?</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="clash-card">
-          <div class="clash-card__term">&ldquo;Inbound&rdquo;</div>
-          <div class="clash-card__versions">
-            <div class="clash-card__ver"><strong>Marketing:</strong> website form fill</div>
-            <div class="clash-card__ver"><strong>Sales:</strong> any deal we didn&rsquo;t cold-call</div>
-          </div>
-        </div>
-        <div class="clash-card">
-          <div class="clash-card__term">&ldquo;Active customer&rdquo;</div>
-          <div class="clash-card__versions">
-            <div class="clash-card__ver">No shared definition. Paying? Logged in? Has a subscription? All three?</div>
-          </div>
-        </div>
-      </div>
-      <div class="blockquote">
-        <div class="blockquote__text">&ldquo;Can we have a library of definitions?&rdquo;</div>
-        <div class="blockquote__attr">&mdash; Hugo Jennerholm, Commercial Ops &mdash; instinctively naming the root problem</div>
       </div>
     </div>
 
     <!-- Slide 7: Data Source Mess (deck-only) -->
     <div class="slide">
       <div class="slide-badge">The Mess</div>
-      <h1 class="slide-title">15+ systems.<br>No unified approach.</h1>
+      <h1 class="slide-title" style="font-size:clamp(36px, 3.5vw, 52px); white-space:nowrap;">15+ systems. No unified approach.</h1>
       <div class="mess-layout">
         <div class="mess-group mess-group--revenue">
           <div class="mess-group__label">Revenue &amp; Billing</div>
@@ -2001,28 +2025,34 @@
 
     <!-- Slide 8: Who Feels This -->
     <div class="slide">
-      <div class="slide-badge">Who Feels This</div>
-      <h1 class="slide-title">Many questions per team.<br>No fast answers today.</h1>
-      <div class="persona-grid">
-        <div class="persona-card">
-          <div class="persona-card__team">Sales</div>
-          <div class="persona-card__q">&ldquo;Is this a good lead?&rdquo;</div>
-          <div class="persona-card__need">Needs ICP fit + procurement history in seconds</div>
+      <div class="split-slide">
+        <div class="split-slide__left">
+          <div class="slide-badge">Who Feels This</div>
+          <h1 class="slide-title">Many questions per team.<br>No fast answers today.</h1>
         </div>
-        <div class="persona-card">
-          <div class="persona-card__team">Customer Success</div>
-          <div class="persona-card__q">&ldquo;Is this customer healthy?&rdquo;</div>
-          <div class="persona-card__need">Needs usage + billing + sentiment in one view</div>
-        </div>
-        <div class="persona-card">
-          <div class="persona-card__team">Commercial Ops</div>
-          <div class="persona-card__q">&ldquo;What happened this week?&rdquo;</div>
-          <div class="persona-card__need">Needs unified reporting without 5-hour Monday joins</div>
-        </div>
-        <div class="persona-card">
-          <div class="persona-card__team">Leadership</div>
-          <div class="persona-card__q">&ldquo;Are we on track?&rdquo;</div>
-          <div class="persona-card__need">Needs one set of numbers everyone trusts</div>
+        <div class="split-slide__right">
+          <div class="persona-grid">
+            <div class="persona-card">
+              <div class="persona-card__team">Sales</div>
+              <div class="persona-card__q">&ldquo;Is this a good lead?&rdquo;</div>
+              <div class="persona-card__need">Needs ICP fit + procurement history in seconds</div>
+            </div>
+            <div class="persona-card">
+              <div class="persona-card__team">Customer Success</div>
+              <div class="persona-card__q">&ldquo;Is this customer healthy?&rdquo;</div>
+              <div class="persona-card__need">Needs usage + billing + sentiment in one view</div>
+            </div>
+            <div class="persona-card">
+              <div class="persona-card__team">Commercial Ops</div>
+              <div class="persona-card__q">&ldquo;What happened this week?&rdquo;</div>
+              <div class="persona-card__need">Needs unified reporting without 5-hour Monday joins</div>
+            </div>
+            <div class="persona-card">
+              <div class="persona-card__team">Leadership</div>
+              <div class="persona-card__q">&ldquo;Are we on track?&rdquo;</div>
+              <div class="persona-card__need">Needs one set of numbers everyone trusts</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2136,7 +2166,7 @@
           <div class="step__text"><strong>Kickstart Glossary &amp; connect 3 sources</strong> &mdash; Shared definitions + Younium, PostHog, and Procurement Data. Prove the join key works.</div>
         </div>
         <div class="step">
-          <span class="step__week">Week 3</span>
+          <span class="step__week">Week 2</span>
           <div class="step__text"><strong>Customer Journey Map</strong> &mdash; Define the shared lifecycle: Acquire &rarr; Activate &rarr; Retain &rarr; Revenue &rarr; Referral.</div>
         </div>
         <div class="step">
