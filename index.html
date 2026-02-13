@@ -1507,7 +1507,8 @@
 
     /* ---- Phone: scrollable, spacious sides ---- */
     @media (max-width: 768px) {
-      .deck { height: auto; overflow-y: auto; }
+      html, body { overflow: auto; height: auto; }
+      .deck { height: auto; overflow-y: visible; }
       .slide {
         position: relative;
         inset: auto;
@@ -1786,7 +1787,7 @@
           <div class="metric-card__detail">Leading indicator for revenue. Today: no unified tracking across tools.</div>
         </div>
         <div class="metric-card">
-          <div class="metric-card__value success">~3,000</div>
+          <div class="metric-card__value success">+3,000</div>
           <div class="metric-card__label">New Paying Companies Needed</div>
           <div class="metric-card__detail">The critical growth number. Requires Acquire + Activate working together.</div>
         </div>
@@ -2213,7 +2214,6 @@
       </div>
       <p class="slide-body" style="margin-top: 32px; color: var(--text-tertiary);">The test: if Hugo doesn&rsquo;t need his Monday spreadsheet anymore, we won.</p>
     </div>
-
 
   </div>
 
