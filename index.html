@@ -462,17 +462,14 @@
     /* ---- Split Layout (headline left, content right) ---- */
     .split-slide {
       display: grid;
-      grid-template-columns: 0.7fr 1fr;
+      grid-template-columns: 0.65fr 1fr;
       gap: 48px;
-      align-items: start;
+      align-items: center;
       flex: 1;
       min-height: 0;
     }
-    .split-slide__left {
-      position: sticky;
-      top: 0;
-    }
     .split-slide__left .slide-title {
+      font-size: 42px;
       margin-bottom: 16px;
     }
 
