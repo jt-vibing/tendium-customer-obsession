@@ -1028,6 +1028,14 @@
       background: var(--surface-bg);
       border: 1px solid var(--border);
       color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-pill__icon {
+      font-size: 14px;
+      flex-shrink: 0;
     }
 
     .feature-pill--later {
@@ -1390,84 +1398,131 @@
     }
 
     /* ---- Mobile Responsive ---- */
+    @media (max-width: 1024px) {
+      .slide { padding: 60px 60px; }
+    }
+
     @media (max-width: 768px) {
       .slide {
-        padding: 40px 24px;
-        overflow-y: auto;
+        padding: 48px 32px;
         justify-content: flex-start;
-        padding-top: 60px;
+        padding-bottom: 60px;
       }
 
-      .slide-title { font-size: 28px; }
-      .slide-title--lg { font-size: 32px; }
-      .slide-subtitle { font-size: 16px; }
-      .slide-body { font-size: 15px; }
+      .slide-badge { font-size: 11px; padding: 4px 12px; margin-bottom: 16px; }
+      .slide-title { font-size: 26px; margin-bottom: 12px; }
+      .slide-title--lg { font-size: 30px; }
+      .slide-subtitle { font-size: 15px; }
+      .slide-body { font-size: 14px; }
 
-      .metrics { grid-template-columns: 1fr; gap: 12px; }
-      .metric-card { padding: 20px; }
-      .metric-card__value { font-size: 28px; }
+      /* Stakes */
+      .metrics { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
+      .metric-card { padding: 18px; }
+      .metric-card__value { font-size: 26px; }
+      .metric-card__label { font-size: 13px; }
+      .metric-card__detail { font-size: 12px; }
 
-      .people-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .person-card { padding: 12px 8px; }
-      .person-card__avatar { width: 40px; height: 40px; }
-      .person-card__name { font-size: 12px; }
+      /* Discovery */
+      .people-grid { grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 24px; }
+      .person-card { padding: 10px 6px; }
+      .person-card__avatar { width: 36px; height: 36px; }
+      .person-card__name { font-size: 11px; }
       .person-card__role { font-size: 9px; }
 
-      .elephant-layout { grid-template-columns: 1fr; gap: 24px; }
-      .elephant-img img { max-width: 100%; }
+      /* Elephant */
+      .elephant-layout { grid-template-columns: 1fr; gap: 20px; }
+      .elephant-img img { max-width: 280px; margin: 0 auto; display: block; }
 
-      .radial { width: 100%; height: auto; min-height: 500px; transform: scale(0.6); transform-origin: top center; }
+      /* Radial — hide on mobile, show as list */
+      .radial { display: none; }
+      .radial-mobile { display: flex !important; }
 
-      .clashes { grid-template-columns: 1fr; gap: 10px; }
-      .clash-card { padding: 16px; }
-      .blockquote { padding: 14px 16px; margin-top: 20px; }
-      .blockquote__text { font-size: 15px; }
+      /* Contradictions */
+      .clashes { grid-template-columns: 1fr; gap: 8px; margin-top: 20px; }
+      .clash-card { padding: 14px; }
+      .clash-card__term { font-size: 13px; margin-bottom: 6px; }
+      .clash-card__ver { font-size: 12px; }
+      .blockquote { padding: 12px 16px; margin-top: 16px; }
+      .blockquote__text { font-size: 14px; }
+      .blockquote__attr { font-size: 11px; }
 
-      .mess-layout { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .mess-group { padding: 14px; }
+      /* Mess */
+      .mess-layout { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+      .mess-group { padding: 12px; }
+      .mess-group__label { font-size: 9px; margin-bottom: 8px; }
+      .mess-tool { font-size: 12px; padding: 4px 0; }
+      .mess-footer { padding: 12px; }
+      .mess-footer__text { font-size: 12px; }
 
-      .persona-grid { grid-template-columns: 1fr; gap: 10px; }
-      .persona-card { padding: 20px; }
-      .persona-card__q { font-size: 18px; }
+      /* Who Feels This */
+      .persona-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+      .persona-card { padding: 16px; }
+      .persona-card__team { font-size: 10px; margin-bottom: 6px; }
+      .persona-card__q { font-size: 16px; margin-bottom: 6px; }
+      .persona-card__need { font-size: 11px; }
 
-      .fractures { gap: 10px; }
-      .fracture { padding: 16px; }
-      .fracture__title { font-size: 16px; }
+      /* Fractures */
+      .fractures { gap: 8px; margin-top: 20px; }
+      .fracture { padding: 14px 16px; gap: 12px; }
+      .fracture__num { width: 28px; height: 28px; font-size: 12px; }
+      .fracture__title { font-size: 15px; }
+      .fracture__desc { font-size: 13px; }
 
-      .solution-pillars { grid-template-columns: 1fr; gap: 12px; }
-      .pillar { padding: 24px 20px; }
-      .solution-equation { flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+      /* Solution */
+      .solution-pillars { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
+      .pillar { padding: 20px 16px; }
+      .pillar__icon { width: 40px; height: 40px; font-size: 18px; margin-bottom: 10px; }
+      .pillar__name { font-size: 17px; }
+      .pillar__desc { font-size: 12px; }
+      .pillar__connects { margin-top: 10px; padding-top: 10px; }
+      .solution-equation { flex-wrap: wrap; gap: 8px; margin-top: 16px; }
       .solution-equation__part { font-size: 12px; }
-      .solution-equation__result { font-size: 14px; padding: 6px 14px; }
+      .solution-equation__op { font-size: 16px; }
+      .solution-equation__result { font-size: 13px; padding: 6px 14px; }
 
-      .speed-grid { grid-template-columns: 1fr; gap: 12px; }
-      .speed-card { padding: 20px; }
-      .speed-card__before, .speed-card__after { font-size: 22px; }
+      /* Speed / Decision */
+      .speed-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
+      .speed-card { padding: 18px; }
+      .speed-card__before, .speed-card__after { font-size: 20px; }
+      .speed-card__label { font-size: 12px; margin-top: 8px; }
 
-      .steps { gap: 10px; }
-      .step { padding: 16px; flex-direction: column; gap: 8px; }
-      .step__text { font-size: 14px; }
+      /* Steps */
+      .steps { gap: 8px; margin-top: 20px; }
+      .step { padding: 12px 16px; gap: 10px; }
+      .step__week { font-size: 11px; padding: 3px 10px; }
+      .step__text { font-size: 13px; }
 
-      .success-box { padding: 24px; }
-      .success-box__text { font-size: 18px; }
+      /* Success */
+      .success-box { padding: 20px; margin-top: 24px; }
+      .success-box__text { font-size: 17px; }
 
-      .journey-skeleton { flex-direction: column; gap: 8px; }
-      .journey-arrow { transform: rotate(90deg); text-align: center; }
+      /* Journey skeleton */
+      .journey-skeleton { flex-direction: column; gap: 6px; margin-top: 20px; }
+      .journey-arrow { transform: rotate(90deg); font-size: 12px; }
+      .journey-stage { padding: 12px; }
 
-      .two-col { grid-template-columns: 1fr; gap: 20px; }
-
-      .split-compare { grid-template-columns: 1fr; }
-      .split-vs { padding: 8px 0; }
+      /* Two-col / Appendix */
+      .two-col { grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
+      .feature-group { margin-top: 20px; }
+      .feature-pill { font-size: 12px; padding: 6px 12px; }
 
       .nav-hint { display: none; }
+      .counter { font-size: 11px; bottom: 12px; right: 16px; }
     }
 
     @media (max-width: 480px) {
-      .slide { padding: 32px 16px; padding-top: 48px; }
-      .slide-title { font-size: 24px; }
-      .people-grid { grid-template-columns: repeat(2, 1fr); }
+      .slide { padding: 40px 20px; padding-bottom: 52px; }
+      .slide-title { font-size: 22px; }
+      .slide-title--lg { font-size: 26px; }
+
+      .people-grid { grid-template-columns: repeat(3, 1fr); }
       .mess-layout { grid-template-columns: 1fr; }
-      .radial { transform: scale(0.45); }
+      .persona-grid { grid-template-columns: 1fr; }
+
+      .elephant-img img { max-width: 200px; }
+
+      .metric-card__value { font-size: 22px; }
+      .speed-card__before, .speed-card__after { font-size: 18px; }
     }
 
     /* ---- Password Gate ---- */
@@ -1511,6 +1566,44 @@
 
     .pw-gate__input::placeholder {
       color: var(--text-tertiary);
+    }
+
+    /* ---- Radial mobile fallback ---- */
+    .radial-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .radial-mobile__card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 3px solid;
+    }
+
+    .radial-mobile__card:nth-child(1) { border-left-color: var(--purple); }
+    .radial-mobile__card:nth-child(2) { border-left-color: var(--success); }
+    .radial-mobile__card:nth-child(3) { border-left-color: var(--accent); }
+    .radial-mobile__card:nth-child(4) { border-left-color: var(--error); }
+    .radial-mobile__card:nth-child(5) { border-left-color: var(--warning); }
+    .radial-mobile__card:nth-child(6) { border-left-color: #38BDF8; }
+    .radial-mobile__card:nth-child(7) { border-left-color: #2DD4BF; }
+
+    .radial-mobile__name {
+      font-size: 13px;
+      font-weight: 700;
+      min-width: 90px;
+    }
+
+    .radial-mobile__sees {
+      font-size: 12px;
+      color: var(--text-secondary);
     }
 
     .pw-gate__error {
@@ -1685,6 +1778,15 @@
           <div class="radial__card-name">RevOps</div>
           <div class="radial__card-sees">ARR, subscriptions, churn, SaaS billing</div>
         </div>
+      </div>
+      <div class="radial-mobile">
+        <div class="radial-mobile__card"><span class="radial-mobile__name">Product</span><span class="radial-mobile__sees">Adoption, activation, retention, PQLs</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">CS</span><span class="radial-mobile__sees">Churn risk, upsell signals, NPS &amp; sentiment</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">Sales</span><span class="radial-mobile__sees">ICP fit, win rates, ACV, pipeline</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">Leadership</span><span class="radial-mobile__sees">100M path, new customers by market</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">Marketing</span><span class="radial-mobile__sees">Signup attribution, MQL&rarr;Deal</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">Commercial Ops</span><span class="radial-mobile__sees">BOWTIE funnel, pipeline quality</span></div>
+        <div class="radial-mobile__card"><span class="radial-mobile__name">RevOps</span><span class="radial-mobile__sees">ARR, subscriptions, churn, billing</span></div>
       </div>
     </div>
 
@@ -1971,30 +2073,30 @@
       <div class="feature-group">
         <div class="feature-group__label">Phase 1 &mdash; V1 by March 6</div>
         <div class="feature-pills">
-          <span class="feature-pill">Search</span>
-          <span class="feature-pill">Glossary</span>
-          <span class="feature-pill">Profile</span>
-          <span class="feature-pill">People</span>
-          <span class="feature-pill">Timeline</span>
-          <span class="feature-pill">Briefs</span>
-          <span class="feature-pill">Relationships</span>
-          <span class="feature-pill">Groups</span>
-          <span class="feature-pill">Export</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F50D;</span>Search</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4D6;</span>Glossary</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F464;</span>Profile</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F465;</span>People</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4C5;</span>Timeline</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F0CF;</span>Briefs</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F517;</span>Relationships</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F3E2;</span>Groups</span>
+          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4CA;</span>Export</span>
         </div>
       </div>
       <div class="feature-group">
         <div class="feature-group__label">Phase 2</div>
         <div class="feature-pills">
-          <span class="feature-pill feature-pill--later">Signals</span>
-          <span class="feature-pill feature-pill--later">Insights</span>
-          <span class="feature-pill feature-pill--later">Agents</span>
+          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F3AF;</span>Signals</span>
+          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F4A1;</span>Insights</span>
+          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F916;</span>Agents</span>
         </div>
       </div>
       <div class="feature-group">
         <div class="feature-group__label">Phase 3</div>
         <div class="feature-pills">
-          <span class="feature-pill feature-pill--later">Tendium Activity</span>
-          <span class="feature-pill feature-pill--later">Predict</span>
+          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F4C8;</span>Tendium Activity</span>
+          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F52E;</span>Predict</span>
         </div>
       </div>
     </div>
