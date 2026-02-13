@@ -1383,10 +1383,146 @@
       font-family: inherit;
       font-size: 11px;
     }
+
+    /* ---- Mobile Responsive ---- */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 40px 24px;
+        overflow-y: auto;
+        justify-content: flex-start;
+        padding-top: 60px;
+      }
+
+      .slide-title { font-size: 28px; }
+      .slide-title--lg { font-size: 32px; }
+      .slide-subtitle { font-size: 16px; }
+      .slide-body { font-size: 15px; }
+
+      .metrics { grid-template-columns: 1fr; gap: 12px; }
+      .metric-card { padding: 20px; }
+      .metric-card__value { font-size: 28px; }
+
+      .people-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .person-card { padding: 12px 8px; }
+      .person-card__avatar { width: 40px; height: 40px; }
+      .person-card__name { font-size: 12px; }
+      .person-card__role { font-size: 9px; }
+
+      .elephant-layout { grid-template-columns: 1fr; gap: 24px; }
+      .elephant-img img { max-width: 100%; }
+
+      .radial { width: 100%; height: auto; min-height: 500px; transform: scale(0.6); transform-origin: top center; }
+
+      .clashes { grid-template-columns: 1fr; gap: 10px; }
+      .clash-card { padding: 16px; }
+      .blockquote { padding: 14px 16px; margin-top: 20px; }
+      .blockquote__text { font-size: 15px; }
+
+      .mess-layout { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .mess-group { padding: 14px; }
+
+      .persona-grid { grid-template-columns: 1fr; gap: 10px; }
+      .persona-card { padding: 20px; }
+      .persona-card__q { font-size: 18px; }
+
+      .fractures { gap: 10px; }
+      .fracture { padding: 16px; }
+      .fracture__title { font-size: 16px; }
+
+      .solution-pillars { grid-template-columns: 1fr; gap: 12px; }
+      .pillar { padding: 24px 20px; }
+      .solution-equation { flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+      .solution-equation__part { font-size: 12px; }
+      .solution-equation__result { font-size: 14px; padding: 6px 14px; }
+
+      .speed-grid { grid-template-columns: 1fr; gap: 12px; }
+      .speed-card { padding: 20px; }
+      .speed-card__before, .speed-card__after { font-size: 22px; }
+
+      .steps { gap: 10px; }
+      .step { padding: 16px; flex-direction: column; gap: 8px; }
+      .step__text { font-size: 14px; }
+
+      .success-box { padding: 24px; }
+      .success-box__text { font-size: 18px; }
+
+      .journey-skeleton { flex-direction: column; gap: 8px; }
+      .journey-arrow { transform: rotate(90deg); text-align: center; }
+
+      .two-col { grid-template-columns: 1fr; gap: 20px; }
+
+      .split-compare { grid-template-columns: 1fr; }
+      .split-vs { padding: 8px 0; }
+
+      .nav-hint { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .slide { padding: 32px 16px; padding-top: 48px; }
+      .slide-title { font-size: 24px; }
+      .people-grid { grid-template-columns: repeat(2, 1fr); }
+      .mess-layout { grid-template-columns: 1fr; }
+      .radial { transform: scale(0.45); }
+    }
+
+    /* ---- Password Gate ---- */
+    .pw-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--base-bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .pw-gate.hidden { display: none; }
+
+    .pw-gate__label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .pw-gate__input {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text-primary);
+      width: 260px;
+      text-align: center;
+      outline: none;
+    }
+
+    .pw-gate__input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-subtle);
+    }
+
+    .pw-gate__input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .pw-gate__error {
+      font-size: 13px;
+      color: var(--error-text);
+      height: 18px;
+    }
   </style>
 </head>
 <body>
-  <div class="deck" id="deck">
+  <div class="pw-gate" id="pwGate">
+    <div class="pw-gate__label">This deck is password protected</div>
+    <input class="pw-gate__input" id="pwInput" type="password" placeholder="Enter password" autofocus>
+    <div class="pw-gate__error" id="pwError"></div>
+  </div>
+
+  <div class="deck" id="deck" style="display:none;">
 
     <!-- Slide 1: Title -->
     <div class="slide">
@@ -1945,6 +2081,32 @@
   <div class="nav-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate &nbsp;&middot;&nbsp; <kbd>Esc</kbd> close</div>
 
   <script>
+    (function () {
+      var gate = document.getElementById('pwGate');
+      var input = document.getElementById('pwInput');
+      var error = document.getElementById('pwError');
+      var deck = document.getElementById('deck');
+      var pw = 'customer';
+
+      if (sessionStorage.getItem('pw_ok') === '1') {
+        gate.classList.add('hidden');
+        deck.style.display = '';
+      }
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          if (input.value === pw) {
+            sessionStorage.setItem('pw_ok', '1');
+            gate.classList.add('hidden');
+            deck.style.display = '';
+          } else {
+            error.textContent = 'Incorrect password';
+            input.value = '';
+          }
+        }
+      });
+    })();
+
     (function () {
       var slides = document.querySelectorAll('.slide');
       var total = slides.length;
