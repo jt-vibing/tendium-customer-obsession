@@ -59,16 +59,15 @@
       inset: 0;
       display: none;
       flex-direction: column;
+      justify-content: center;
       padding: 60px 120px;
       opacity: 0;
       transition: opacity 200ms ease;
       overflow-y: auto;
     }
 
-    .slide::before,
-    .slide::after {
-      content: '';
-      flex: 1 0 0px;
+    .slide.slide--overflow {
+      justify-content: flex-start;
     }
 
     .slide.active {
@@ -2123,11 +2122,19 @@
       var mainSlides = 12; // slides before appendix
       var current = 0;
 
+      function fixOverflow(slide) {
+        slide.classList.remove('slide--overflow');
+        if (slide.scrollHeight > slide.clientHeight + 2) {
+          slide.classList.add('slide--overflow');
+        }
+      }
+
       function show(idx) {
         if (idx < 0 || idx >= total) return;
         slides[current].classList.remove('active');
         current = idx;
         slides[current].classList.add('active');
+        fixOverflow(slides[current]);
         document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
         history.replaceState(null, '', '#' + current);
         if (current >= mainSlides) {
@@ -2164,6 +2171,9 @@
           else show(current - 1);
         }
       });
+
+      // Recheck overflow on resize
+      window.addEventListener('resize', function () { fixOverflow(slides[current]); });
     })();
   </script>
 </body>
