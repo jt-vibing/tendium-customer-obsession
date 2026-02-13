@@ -1543,11 +1543,11 @@
       .radial-mobile__name { font-size: 12px; min-width: 80px; }
       .radial-mobile__sees { font-size: 11px; }
 
-      /* Split layout — stack on mobile */
+      /* Split layout — stack on mobile, headline always on top */
       .split-slide { grid-template-columns: 1fr; gap: 12px; }
+      .split-slide__left { order: -1; }
       .split-slide__left .slide-title { font-size: 28px; }
-      .split-slide__right { order: -1; }
-      .split-slide__left .blockquote { margin-top: 0; }
+      .split-slide__left .blockquote { margin-top: 8px; }
 
       /* Persona — single col in stacked split */
       .split-slide .persona-grid { grid-template-columns: 1fr; gap: 8px; }
