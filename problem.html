@@ -1043,6 +1043,53 @@
       border-style: dashed;
     }
 
+    /* ---- Feature Card Grid ---- */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .feat-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 20px 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .feat-card__icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .feat-card__name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .feat-card--soon {
+      border-style: dashed;
+      opacity: 0.7;
+    }
+
+    .feat-card__badge {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      background: var(--surface-bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 2px 8px;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
     /* ---- Two-column ---- */
     .two-col {
       display: grid;
@@ -2072,31 +2119,31 @@
       <h1 class="slide-title">What we&rsquo;re building</h1>
       <div class="feature-group">
         <div class="feature-group__label">Phase 1 &mdash; V1 by March 6</div>
-        <div class="feature-pills">
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F50D;</span>Search</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4D6;</span>Glossary</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F464;</span>Profile</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F465;</span>People</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4C5;</span>Timeline</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F0CF;</span>Briefs</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F517;</span>Relationships</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F3E2;</span>Groups</span>
-          <span class="feature-pill"><span class="feature-pill__icon">&#x1F4CA;</span>Export</span>
+        <div class="feat-grid">
+          <div class="feat-card"><div class="feat-card__icon">&#x1F50D;</div><div class="feat-card__name">Search</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F4D6;</div><div class="feat-card__name">Glossary</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F464;</div><div class="feat-card__name">Profile</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F465;</div><div class="feat-card__name">People</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F4C5;</div><div class="feat-card__name">Timeline</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F0CF;</div><div class="feat-card__name">Briefs</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F517;</div><div class="feat-card__name">Relationships</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F3E2;</div><div class="feat-card__name">Groups</div></div>
+          <div class="feat-card"><div class="feat-card__icon">&#x1F4CA;</div><div class="feat-card__name">Export</div></div>
         </div>
       </div>
       <div class="feature-group">
         <div class="feature-group__label">Phase 2</div>
-        <div class="feature-pills">
-          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F3AF;</span>Signals</span>
-          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F4A1;</span>Insights</span>
-          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F916;</span>Agents</span>
+        <div class="feat-grid">
+          <div class="feat-card feat-card--soon"><div class="feat-card__badge">Coming soon</div><div class="feat-card__icon">&#x1F3AF;</div><div class="feat-card__name">Signals</div></div>
+          <div class="feat-card feat-card--soon"><div class="feat-card__badge">Coming soon</div><div class="feat-card__icon">&#x1F4A1;</div><div class="feat-card__name">Insights</div></div>
+          <div class="feat-card feat-card--soon"><div class="feat-card__badge">Coming soon</div><div class="feat-card__icon">&#x1F916;</div><div class="feat-card__name">Agents</div></div>
         </div>
       </div>
       <div class="feature-group">
         <div class="feature-group__label">Phase 3</div>
-        <div class="feature-pills">
-          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F4C8;</span>Tendium Activity</span>
-          <span class="feature-pill feature-pill--later"><span class="feature-pill__icon">&#x1F52E;</span>Predict</span>
+        <div class="feat-grid">
+          <div class="feat-card feat-card--soon"><div class="feat-card__badge">Coming soon</div><div class="feat-card__icon">&#x1F4C8;</div><div class="feat-card__name">Tendium Activity</div></div>
+          <div class="feat-card feat-card--soon"><div class="feat-card__badge">Coming soon</div><div class="feat-card__icon">&#x1F52E;</div><div class="feat-card__name">Predict</div></div>
         </div>
       </div>
     </div>
