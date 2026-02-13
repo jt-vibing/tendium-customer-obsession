@@ -1505,20 +1505,27 @@
       .solution-pillars { gap: 14px; }
     }
 
-    /* ---- Phone: stacked, spacious sides ---- */
+    /* ---- Phone: scrollable, spacious sides ---- */
     @media (max-width: 768px) {
+      .deck { height: auto; overflow-y: auto; }
       .slide {
-        padding: 48px 40px;
+        position: relative;
+        inset: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: auto;
+        padding: 48px 32px;
         justify-content: flex-start;
         padding-bottom: 56px;
+        overflow-y: visible;
       }
-      .slide[style*="padding"] { padding: 48px 40px !important; padding-bottom: 56px !important; }
+      .slide[style*="padding"] { padding: 48px 32px !important; padding-bottom: 56px !important; }
 
-      .slide-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 10px; }
-      .slide-title { font-size: 28px; margin-bottom: 8px; }
-      .slide-title--lg { font-size: 32px; }
-      .slide-subtitle { font-size: 15px; max-width: 100%; }
-      .slide-body { font-size: 14px; max-width: 100%; }
+      .slide-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 12px; }
+      .slide-title { font-size: 36px; font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px; }
+      .slide-title--lg { font-size: 40px; }
+      .slide-subtitle { font-size: 17px; max-width: 100%; color: var(--text-tertiary); line-height: 1.5; }
+      .slide-body { font-size: 15px; max-width: 100%; }
 
       /* Stakes — single column, compact */
       .metrics { grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
@@ -1544,9 +1551,9 @@
       .radial-mobile__sees { font-size: 11px; }
 
       /* Split layout — stack on mobile, headline always on top */
-      .split-slide { grid-template-columns: 1fr; gap: 12px; }
+      .split-slide { grid-template-columns: 1fr; gap: 16px; }
       .split-slide__left { order: -1; }
-      .split-slide__left .slide-title { font-size: 28px; }
+      .split-slide__left .slide-title { font-size: 36px; }
       .split-slide__left .blockquote { margin-top: 8px; }
 
       /* Persona — single col in stacked split */
@@ -1637,18 +1644,19 @@
       .feat-card__badge { font-size: 7px; padding: 2px 6px; top: 6px; right: 6px; }
 
       .nav-hint { display: none; }
-      .counter { font-size: 11px; bottom: 12px; right: 16px; }
+      .progress { position: fixed; z-index: 100; }
+      .counter { position: fixed; z-index: 100; font-size: 11px; bottom: 12px; right: 16px; }
     }
 
     /* ---- Small phone ---- */
     @media (max-width: 420px) {
       .slide { padding: 40px 28px; padding-bottom: 48px; }
       .slide[style*="padding"] { padding: 40px 28px !important; padding-bottom: 48px !important; }
-      .slide-title { font-size: 24px; }
-      .slide-title--lg { font-size: 26px; }
+      .slide-title { font-size: 30px; }
+      .slide-title--lg { font-size: 34px; }
 
-      .split-slide__left .slide-title { font-size: 24px; }
-      .slide-title[style*="white-space"] { font-size: 24px !important; }
+      .split-slide__left .slide-title { font-size: 30px; }
+      .slide-title[style*="white-space"] { font-size: 30px !important; }
 
       .people-grid { grid-template-columns: repeat(3, 1fr); }
       .mess-layout { grid-template-columns: 1fr; }
