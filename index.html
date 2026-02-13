@@ -1544,7 +1544,15 @@
       .radial-mobile__sees { font-size: 11px; }
 
       /* Split layout — stack on mobile */
-      .split-slide { grid-template-columns: 1fr; gap: 16px; }
+      .split-slide { grid-template-columns: 1fr; gap: 12px; }
+      .split-slide__left .slide-title { font-size: 28px; }
+      .split-slide__right { order: -1; }
+      .split-slide__left .blockquote { margin-top: 0; }
+
+      /* Persona — single col in stacked split */
+      .split-slide .persona-grid { grid-template-columns: 1fr; gap: 8px; }
+      .split-slide .persona-card { padding: 14px; }
+      .split-slide .persona-card__q { font-size: 16px; }
 
       /* Contradictions — 2x2 grid kept */
       .clashes { gap: 8px; margin-top: 12px; }
@@ -1554,6 +1562,9 @@
       .blockquote { padding: 10px 14px; margin-top: 12px; }
       .blockquote__text { font-size: 14px; }
       .blockquote__attr { font-size: 11px; }
+
+      /* Mess — allow headline wrap on mobile */
+      .slide-title[style*="white-space"] { white-space: normal !important; font-size: 28px !important; }
 
       /* Mess — 2 col */
       .mess-layout { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
@@ -1635,6 +1646,9 @@
       .slide[style*="padding"] { padding: 40px 28px !important; padding-bottom: 48px !important; }
       .slide-title { font-size: 24px; }
       .slide-title--lg { font-size: 26px; }
+
+      .split-slide__left .slide-title { font-size: 24px; }
+      .slide-title[style*="white-space"] { font-size: 24px !important; }
 
       .people-grid { grid-template-columns: repeat(3, 1fr); }
       .mess-layout { grid-template-columns: 1fr; }
