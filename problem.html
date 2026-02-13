@@ -156,11 +156,11 @@
     /* ---- Radial Split Layout ---- */
     .radial-layout {
       display: grid;
-      grid-template-columns: 1fr 1.4fr;
+      grid-template-columns: 1fr 1.2fr;
       gap: 40px;
       align-items: center;
-      width: 100%;
-      height: 100%;
+      flex: 1;
+      min-height: 0;
     }
 
     .radial-layout__text {
@@ -170,10 +170,11 @@
     }
 
     .radial-layout__visual {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: visible;
+      min-height: 0;
     }
 
     /* ---- Radial Hub-Spoke (bold) ---- */
@@ -182,7 +183,7 @@
       width: 600px;
       height: 600px;
       margin: 0 auto;
-      transform: scale(0.85);
+      transform: scale(min(0.85, calc((100vh - 120px) / 600)));
       transform-origin: center center;
     }
 
