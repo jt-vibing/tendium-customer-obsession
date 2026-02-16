@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframes — Tendium Customer Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  </script>
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .dark-toggle {
+      padding: 8px 12px;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header h1 {
+      font-size: 40px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .callout {
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 48px;
+    }
+
+    .callout-title {
+      font-weight: 600;
+      color: var(--accent-text);
+      margin-bottom: 8px;
+    }
+
+    .callout-text {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .wireframe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .wireframe-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .wireframe-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .wireframe-number {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .wireframe-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .wireframe-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .wireframe-features {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .wireframe-features li {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .wireframe-features li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .design-system {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .design-system h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+
+    .color-box {
+      text-align: center;
+    }
+
+    .color-swatch {
+      width: 100%;
+      height: 60px;
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .color-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <div class="logo">Customer Graph — Wireframes</div>
+      <button class="dark-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+    </nav>
+
+    <div class="container">
+      <div class="header">
+        <h1>UX/UI Wireframes</h1>
+        <p>Early prototype for stakeholder feedback — Feb 12, 2026</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">📋 What You're Looking At</div>
+        <div class="callout-text">
+          These wireframes show the proposed user experience for the <strong>Tendium Customer Graph</strong>. All data is realistic but <strong>mocked</strong> — based on Adlibris (Jens's Sales Graph Explorer example) and typical Nordic customers. The goal is to validate the <strong>UX/UI approach</strong> before building with real data.
+        </div>
+      </div>
+
+      <h2 style="margin-bottom: 24px;">Wireframe Pages</h2>
+
+      <div class="wireframe-grid">
+        <!-- Wireframe 1: Search -->
+        <a href="search.html" class="wireframe-card">
+          <div class="wireframe-number">1</div>
+          <div class="wireframe-title">Customer Search</div>
+          <div class="wireframe-desc">
+            Multi-tiered search interface with keyword, natural language, and semantic search modes. Filter by tier, ARR, health, and sector.
+          </div>
+          <ul class="wireframe-features">
+            <li>3 search modes (Keyword, Natural Language, Semantic)</li>
+            <li>Real-time results with match reasons</li>
+            <li>Filter pills for advanced filtering</li>
+            <li>Example queries for each mode</li>
+          </ul>
+        </a>
+
+        <!-- Wireframe 2: Profile -->
+        <a href="profile.html" class="wireframe-card">
+          <div class="wireframe-number">2</div>
+          <div class="wireframe-title">Customer Profile</div>
+          <div class="wireframe-desc">
+            Unified view of customer data from 7 sources: Procurement, Younium, PostHog, Garba, HubSpot, Postmark, Company Groups.
+          </div>
+          <ul class="wireframe-features">
+            <li>5 tabs: Overview, Procurement, Usage, Calls, Punch Cards</li>
+            <li>Key metrics: ARR, Contract end, NRR, Win rate</li>
+            <li>Recent activity timeline</li>
+            <li>Health score indicator</li>
+          </ul>
+        </a>
+
+        <!-- Wireframe 3: Sales Punch Card -->
+        <a href="punch-card-sales.html" class="wireframe-card">
+          <div class="wireframe-number">3</div>
+          <div class="wireframe-title">Sales Punch Card</div>
+          <div class="wireframe-desc">
+            AI-generated intelligence brief for sales calls. 5 sections with procurement insights, relationship status, usage signals, and recommended actions.
+          </div>
+          <ul class="wireframe-features">
+            <li>Procurement profile (win rate, bid volume, sectors)</li>
+            <li>Current relationship (ARR, tier, expansion gap)</li>
+            <li>Usage signals (adoption, health score)</li>
+            <li>Recent activity (awards, calls, milestones)</li>
+            <li>Recommended actions (upsell, renewal, monitoring)</li>
+          </ul>
+        </a>
+
+        <!-- Wireframe 4: CS Health Brief -->
+        <a href="punch-card-cs.html" class="wireframe-card">
+          <div class="wireframe-number">4</div>
+          <div class="wireframe-title">CS Health Brief</div>
+          <div class="wireframe-desc">
+            Hugo's Monday spreadsheet replacement. AI-generated health assessment with churn signals, usage trends, and proactive CS actions.
+          </div>
+          <ul class="wireframe-features">
+            <li>Customer health score (computed metric)</li>
+            <li>Usage trends (30/60/90 day analysis)</li>
+            <li>Churn signals (positive/warning/risk indicators)</li>
+            <li>Procurement activity as growth indicator</li>
+            <li>Recommended CS actions</li>
+          </ul>
+        </a>
+      </div>
+
+      <h2 style="margin-bottom: 24px;">Design System</h2>
+
+      <div class="design-system">
+        <h3>Linear-Inspired Colors & Typography</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+          Reused from <a href="../problem/index.html" style="color: var(--accent-text); text-decoration: none;">Problem Page</a> and <a href="../tech/index.html" style="color: var(--accent-text); text-decoration: none;">Tech Page</a>
+        </p>
+
+        <div class="color-grid">
+          <div class="color-box">
+            <div class="color-swatch" style="background: var(--accent);"></div>
+            <div class="color-label">Accent</div>
+          </div>
+          <div class="color-box">
+            <div class="color-swatch" style="background: var(--success);"></div>
+            <div class="color-label">Success</div>
+          </div>
+          <div class="color-box">
+            <div class="color-swatch" style="background: var(--warning);"></div>
+            <div class="color-label">Warning</div>
+          </div>
+          <div class="color-box">
+            <div class="color-swatch" style="background: var(--error);"></div>
+            <div class="color-label">Error</div>
+          </div>
+          <div class="color-box">
+            <div class="color-swatch" style="background: var(--purple);"></div>
+            <div class="color-label">Purple</div>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 13px; color: var(--text-tertiary);">
+          <strong>Typography:</strong> Inter (headings, body), JetBrains Mono (code, numbers)<br>
+          <strong>Dark Mode:</strong> Toggle in top-right corner
+        </p>
+      </div>
+
+      <div style="background: var(--warning-subtle); border: 1px solid var(--warning); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px;">
+        <div style="font-weight: 600; color: var(--warning-text); margin-bottom: 8px;">⚠️ Feedback Needed</div>
+        <div style="color: var(--text-secondary); font-size: 15px;">
+          <strong>For testing session (Feb 17):</strong><br>
+          • Does this solve your problem? (Hugo: Monday spreadsheet replacement? Thibaud: Sales calls?)<br>
+          • What's missing or confusing?<br>
+          • What features are critical for V1?<br>
+          • What can wait for V2?
+        </div>
+      </div>
+
+      <div class="footer">
+        <strong>Created:</strong> Feb 12, 2026<br>
+        <strong>Next Step:</strong> Stakeholder review → Iterate → Build interactive prototype (Feb 13-17)<br>
+        <strong>Testing Session:</strong> Monday, Feb 17, 2026 with Hugo, Gustav, Mareks, Lena, Charles, Patrik
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('build-hub-theme', next);
+    }
+  </script>
+</body>
+</html>

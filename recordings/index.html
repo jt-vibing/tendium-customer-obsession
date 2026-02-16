@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recording Audit — Ground Truth from Sessions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    /* Header */
+    .badge {
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 99px; margin-bottom: 16px;
+    }
+    .badge--accent { color: var(--accent-text); background: var(--accent-subtle); }
+    .badge--purple { color: var(--purple-text); background: var(--purple-subtle); }
+    .badge--success { color: var(--success-text); background: var(--success-subtle); }
+    .badge--warning { color: var(--warning-text); background: var(--warning-subtle); }
+    .badge--error { color: var(--error-text); background: var(--error-subtle); }
+
+    h1 { font-size: 28px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+    .subtitle { font-size: 15px; color: var(--text-secondary); line-height: 1.6; max-width: 640px; margin-bottom: 40px; }
+
+    h2 {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 16px; margin-top: 48px;
+    }
+    h2:first-of-type { margin-top: 0; }
+
+    /* Callout */
+    .callout {
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .callout--accent { background: var(--accent-subtle); }
+    .callout--purple { background: var(--purple-subtle); }
+    .callout--warning { background: var(--warning-subtle); }
+    .callout--success { background: var(--success-subtle); }
+    .callout--error { background: var(--error-subtle); }
+
+    .callout-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .callout--accent .callout-label { color: var(--accent-text); }
+    .callout--purple .callout-label { color: var(--purple-text); }
+    .callout--warning .callout-label { color: var(--warning-text); }
+    .callout--success .callout-label { color: var(--success-text); }
+    .callout--error .callout-label { color: var(--error-text); }
+
+    .callout-text {
+      font-size: 14px; color: var(--text-primary); line-height: 1.65;
+    }
+    .callout-text strong { font-weight: 700; }
+
+    /* Cards */
+    .card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    }
+    .card--accent::before { background: var(--accent); }
+    .card--purple::before { background: var(--purple); }
+    .card--success::before { background: var(--success); }
+    .card--warning::before { background: var(--warning); }
+    .card--error::before { background: var(--error); }
+
+    .card-head {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .card-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .card-body { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+    .card-body strong { color: var(--text-primary); font-weight: 600; }
+
+    /* Table */
+    .tbl {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; margin-bottom: 24px;
+    }
+    .tbl th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-tertiary); padding: 10px 12px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .tbl td {
+      padding: 12px; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); line-height: 1.5; vertical-align: top;
+    }
+    .tbl td:first-child { color: var(--text-primary); font-weight: 500; }
+    .tbl tr:last-child td { border-bottom: none; }
+
+    /* Pill */
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 3px 10px;
+      border-radius: 99px; white-space: nowrap;
+    }
+    .pill--accent { background: var(--accent-subtle); color: var(--accent-text); }
+    .pill--purple { background: var(--purple-subtle); color: var(--purple-text); }
+    .pill--success { background: var(--success-subtle); color: var(--success-text); }
+    .pill--warning { background: var(--warning-subtle); color: var(--warning-text); }
+
+    /* Flow diagram */
+    .flow {
+      display: flex; align-items: center; gap: 0;
+      flex-wrap: wrap; margin-bottom: 24px;
+    }
+    .flow-step {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--elevated-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 14px 18px;
+    }
+    .flow-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 700; color: var(--accent-text);
+      background: var(--accent-subtle); width: 24px; height: 24px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .flow-step-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .flow-arrow { font-size: 14px; color: var(--text-tertiary); margin: 0 8px; }
+
+    /* Narrative timeline */
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 7px; top: 28px; bottom: 28px;
+      width: 2px; background: var(--border-strong); border-radius: 1px;
+    }
+    .tl-item { position: relative; padding: 0 0 40px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -36px; top: 6px;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--border-strong); background: var(--base-bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tl-dot span { width: 6px; height: 6px; border-radius: 50%; }
+    .tl-dot--red { border-color: var(--error); }
+    .tl-dot--red span { background: var(--error); }
+    .tl-dot--green { border-color: var(--success); }
+    .tl-dot--green span { background: var(--success); }
+    .tl-dot--yellow { border-color: var(--warning); }
+    .tl-dot--yellow span { background: var(--warning); }
+    .tl-dot--blue { border-color: var(--accent); }
+    .tl-dot--blue span { background: var(--accent); }
+    .tl-dot--purple { border-color: var(--purple); }
+    .tl-dot--purple span { background: var(--purple); }
+
+    .tl-head {
+      display: flex; align-items: baseline; gap: 10px;
+      margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .tl-name { font-size: 18px; font-weight: 700; }
+    .tl-body { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 10px; }
+
+    .look-for {
+      background: var(--surface-bg); border-radius: var(--radius);
+      padding: 12px 16px; margin-bottom: 8px;
+    }
+    .look-for-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 4px;
+    }
+    .look-for-list { list-style: none; }
+    .look-for-list li {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+      padding-left: 16px; position: relative;
+    }
+    .look-for-list li::before {
+      content: '\25B8'; position: absolute; left: 0; color: var(--accent);
+    }
+    .look-for-list li strong { color: var(--text-primary); font-weight: 600; }
+
+    /* Mono */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; background: var(--surface-bg);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* Footer */
+    .page-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; border-top: 1px solid var(--border); margin-top: 56px;
+    }
+    .page-footer span { font-size: 12px; color: var(--text-tertiary); }
+
+    @media (max-width: 768px) {
+      .page { padding: 28px 16px 60px; }
+      h1 { font-size: 24px; }
+      .flow { flex-direction: column; align-items: stretch; }
+      .flow-arrow { transform: rotate(90deg); text-align: center; margin: 4px 0; }
+      .page-footer { flex-direction: column; gap: 4px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ── Header ── -->
+    <header>
+      <div class="badge badge--purple">Methodology</div>
+      <h1>Recording Audit</h1>
+      <p class="subtitle">Don&rsquo;t trust the tracking plan. Watch what users actually do. Use session recordings to build ground-truth definitions of activation, retention, and adoption &mdash; then validate any event data against what you see.</p>
+    </header>
+
+    <!-- ── The Argument ── -->
+    <div class="callout callout--purple">
+      <div class="callout-label">The Principle</div>
+      <div class="callout-text"><strong>PostHog event tracking is an abstraction layer.</strong> Someone decided &ldquo;this click = activation&rdquo; before watching what users actually do. That&rsquo;s a map drawn before visiting the territory. Session recordings are the territory. Start there.</div>
+    </div>
+
+    <div class="callout callout--accent">
+      <div class="callout-label">Why not both?</div>
+      <div class="callout-text"><strong>Recordings</strong> = how you discover truth (what does &ldquo;active&rdquo; really look like?). <strong>Events</strong> = how you query truth at scale (is Sigma IT active this week?). You need both &mdash; but recordings come first. They define what the events should be.</div>
+    </div>
+
+    <!-- ── The Method ── -->
+    <h2>The Method: 3 Steps</h2>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-text">Watch recordings</div>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-text">Define moments</div>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-text">Map to events</div>
+      </div>
+    </div>
+
+    <!-- ── Step 1 ── -->
+    <div class="card card--purple">
+      <div class="card-head">
+        <span class="card-title">Step 1: Watch 30 Sessions</span>
+        <span class="pill pill--purple">~2 hours</span>
+      </div>
+      <div class="card-body">
+        Screen-record PostHog session replays and feed them to Claude for analysis. No manual note-taking &mdash; Claude watches the recordings and extracts patterns, friction points, and behavioral signals.
+        <br><br>
+        <strong>Cohort selection (10 sessions each):</strong>
+        <br><br>
+        <table class="tbl" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th>Cohort</th>
+              <th>Criteria</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Healthy</td>
+              <td>High ARR, 12+ months tenure, regular weekly logins</td>
+              <td>What does &ldquo;good&rdquo; look like?</td>
+            </tr>
+            <tr>
+              <td>At-Risk</td>
+              <td>Low usage last 30 days, approaching renewal, support tickets</td>
+              <td>What does &ldquo;bad&rdquo; look like?</td>
+            </tr>
+            <tr>
+              <td>New</td>
+              <td>First 14 days after signup (trial or paid)</td>
+              <td>Where do they get stuck or succeed?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Claude Workflow ── -->
+    <div class="card card--accent">
+      <div class="card-head">
+        <span class="card-title">How Claude Watches</span>
+        <span class="pill pill--accent">Workflow</span>
+      </div>
+      <div class="card-body">
+        PostHog session replays are DOM-based (not video files), so they need to be screen-recorded first. Three options, simplest to most automated:
+        <br><br>
+        <strong>Option A: Screen record manually</strong><br>
+        Open PostHog &rarr; play a session replay &rarr; screen-record with macOS (<code>Cmd+Shift+5</code>) &rarr; save as .mov &rarr; feed to Claude. Works for 30 sessions.
+        <br><br>
+        <strong>Option B: Screenshot key moments</strong><br>
+        Open session replay &rarr; pause at key interactions &rarr; screenshot each &rarr; feed the set to Claude with timestamps. Faster, less storage.
+        <br><br>
+        <strong>Option C: PostHog event timeline as proxy</strong><br>
+        Export the session&rsquo;s event timeline (clicks, pageviews, in order) via PostHog API. Claude reads the structured event sequence instead of watching video. Loses visual context but is fully automatable.
+        <br><br>
+        <strong>Recommended for V1:</strong> Option A for the first 10 sessions (to establish visual patterns), then Option C for the remaining 20 (to scale).
+      </div>
+    </div>
+
+    <!-- ── What Claude looks for ── -->
+    <h2>Step 2: What to Look For &mdash; By AARRR Stage</h2>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.65;">
+      For each session recording, Claude maps observed behavior to these 5 lifecycle stages. The goal is to answer: <strong>what does each stage actually look like in the product?</strong> Not what we think it looks like &mdash; what we see.
+    </p>
+
+    <div class="timeline">
+
+      <!-- Acquire -->
+      <div class="tl-item">
+        <div class="tl-dot tl-dot--red"><span></span></div>
+        <div class="tl-head">
+          <span class="tl-name">Acquire</span>
+          <span class="badge badge--error">Where did they come from?</span>
+        </div>
+        <div class="look-for">
+          <div class="look-for-label">Look for in recording</div>
+          <ul class="look-for-list">
+            <li><strong>Entry point:</strong> What was the first page they saw? Direct link, Google, referral?</li>
+            <li><strong>First interaction:</strong> Did they search, browse, or go straight to signup?</li>
+            <li><strong>Drop-off:</strong> Did they leave before signing up? At what point?</li>
+            <li><strong>Procurement signal:</strong> Did they arrive because of a tender notification?</li>
+          </ul>
+        </div>
+        <div class="tl-body">
+          <strong>Current gap:</strong> Visitor &rarr; prospect is a black box. Recordings may reveal whether visitors show intent signals (searching for specific tenders, viewing pricing) that aren&rsquo;t captured in events.
+        </div>
+      </div>
+
+      <!-- Activate -->
+      <div class="tl-item">
+        <div class="tl-dot tl-dot--green"><span></span></div>
+        <div class="tl-head">
+          <span class="tl-name">Activate</span>
+          <span class="badge badge--success">Did they get value?</span>
+        </div>
+        <div class="look-for">
+          <div class="look-for-label">Look for in recording</div>
+          <ul class="look-for-list">
+            <li><strong>Time to first value:</strong> How many minutes from signup to finding a relevant tender?</li>
+            <li><strong>Setup friction:</strong> Did they struggle with filters, onboarding steps, or account config?</li>
+            <li><strong>Aha moment:</strong> What was the first thing that made them lean in? A tender result? A digest email?</li>
+            <li><strong>Feature discovery:</strong> Did they find BidFlow, Intelligence, or Ask Tendium naturally?</li>
+            <li><strong>Confusion signals:</strong> Repeated clicks, back-and-forth navigation, rage clicks</li>
+          </ul>
+        </div>
+        <div class="tl-body">
+          <strong>Key question:</strong> Is &ldquo;found a relevant tender&rdquo; really the activation event, or is it something else? Watch 10 new user recordings and find out.
+        </div>
+      </div>
+
+      <!-- Retain -->
+      <div class="tl-item">
+        <div class="tl-dot tl-dot--yellow"><span></span></div>
+        <div class="tl-head">
+          <span class="tl-name">Retain</span>
+          <span class="badge badge--warning">Did they come back?</span>
+        </div>
+        <div class="look-for">
+          <div class="look-for-label">Look for in recording</div>
+          <ul class="look-for-list">
+            <li><strong>Session frequency:</strong> Compare healthy vs at-risk &mdash; how often do they come back?</li>
+            <li><strong>Session depth:</strong> Healthy users &mdash; do they go deeper (BidFlow, checklists) or just skim?</li>
+            <li><strong>Usage patterns:</strong> Do retained users follow a consistent workflow, or random browsing?</li>
+            <li><strong>Decay signals:</strong> At-risk users &mdash; did sessions get shorter over time? Fewer pages visited?</li>
+            <li><strong>Habit loop:</strong> Is there a trigger (digest email?) &rarr; action (search) &rarr; reward (tender found) pattern?</li>
+          </ul>
+        </div>
+        <div class="tl-body">
+          <strong>Key question:</strong> What&rsquo;s the difference in behavior between a customer at 90% health and one at 40%? The answer defines the health score.
+        </div>
+      </div>
+
+      <!-- Revenue -->
+      <div class="tl-item">
+        <div class="tl-dot tl-dot--blue"><span></span></div>
+        <div class="tl-head">
+          <span class="tl-name">Revenue</span>
+          <span class="badge badge--accent">Did they expand?</span>
+        </div>
+        <div class="look-for">
+          <div class="look-for-label">Look for in recording</div>
+          <ul class="look-for-list">
+            <li><strong>Plan ceiling hits:</strong> Did they try to create a 2nd filter (Light plan limit)? Hit BidFlow limit?</li>
+            <li><strong>Feature exploration:</strong> Did they click into Intelligence features (paywalled for Light)?</li>
+            <li><strong>Multi-user signals:</strong> Different users from same company using different features?</li>
+            <li><strong>Pricing page visits:</strong> Did they view pricing/upgrade pages? How often?</li>
+          </ul>
+        </div>
+        <div class="tl-body">
+          <strong>Key question:</strong> What in-product behavior predicts an upsell? This is the signal that connects PostHog to Younium revenue data in the Customer Graph.
+        </div>
+      </div>
+
+      <!-- Referral -->
+      <div class="tl-item">
+        <div class="tl-dot tl-dot--purple"><span></span></div>
+        <div class="tl-head">
+          <span class="tl-name">Referral</span>
+          <span class="badge badge--purple">Would they recommend?</span>
+        </div>
+        <div class="look-for">
+          <div class="look-for-label">Look for in recording</div>
+          <ul class="look-for-list">
+            <li><strong>Power user signals:</strong> High session frequency + deep feature usage + long tenure</li>
+            <li><strong>Collaboration features:</strong> Did they invite colleagues? Share tenders?</li>
+            <li><strong>Content engagement:</strong> Do they use features that generate shareable output (reports, exports)?</li>
+          </ul>
+        </div>
+        <div class="tl-body">
+          <strong>Key question:</strong> Can we identify &ldquo;champions&rdquo; from recordings alone? These are the people to ask for testimonials and referrals.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Step 3 ── -->
+    <h2>Step 3: Map Observations to Minimal Events</h2>
+
+    <div class="callout callout--warning">
+      <div class="callout-label">The Rule</div>
+      <div class="callout-text"><strong>Only track what you&rsquo;ve seen matter.</strong> If you watched 30 recordings and a behavior never appeared, don&rsquo;t track it. If a behavior clearly separated healthy from at-risk, that&rsquo;s a must-track event. The tracking plan emerges from observation, not assumption.</div>
+    </div>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65;">
+      After watching recordings, fill in this table. These become the PostHog events the Customer Graph actually queries.
+    </p>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>AARRR Stage</th>
+          <th>Observed Behavior</th>
+          <th>PostHog Event</th>
+          <th>Customer Graph Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Activate</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>tender_found</code></td>
+          <td>Time to first value</td>
+        </tr>
+        <tr>
+          <td>Activate</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>filter_created</code></td>
+          <td>Activation checkpoint</td>
+        </tr>
+        <tr>
+          <td>Retain</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>session_start</code></td>
+          <td>Weekly active signal</td>
+        </tr>
+        <tr>
+          <td>Retain</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>bidflow_used</code></td>
+          <td>Feature adoption depth</td>
+        </tr>
+        <tr>
+          <td>Revenue</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>plan_limit_hit</code></td>
+          <td>Upsell signal</td>
+        </tr>
+        <tr>
+          <td>Referral</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">(fill after watching)</td>
+          <td style="color: var(--text-tertiary); font-style: italic;">e.g. <code>invite_sent</code></td>
+          <td>Champion identification</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size: 13px; color: var(--text-tertiary); margin-bottom: 8px;">
+      Target: <strong>5&ndash;7 events total.</strong> Not 50. Each one grounded in something you observed, not something you assumed.
+    </p>
+
+    <!-- ── Claude Prompt Template ── -->
+    <h2>Claude Analysis Prompt</h2>
+
+    <div class="card card--purple">
+      <div class="card-head">
+        <span class="card-title">Prompt Template for Recording Analysis</span>
+      </div>
+      <div class="card-body">
+        When feeding a screen recording or screenshot sequence to Claude, use this prompt:
+        <br><br>
+        <div style="background: var(--surface-bg); border-radius: var(--radius); padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8; color: var(--text-secondary);">
+          You are analyzing a PostHog session recording from Tendium&rsquo;s B2G SaaS product.<br><br>
+
+          <strong style="color: var(--text-primary);">User context:</strong> [Healthy / At-Risk / New] customer, [plan tier], [tenure]<br><br>
+
+          <strong style="color: var(--text-primary);">Watch for and report:</strong><br>
+          1. <strong style="color: var(--accent-text);">Entry &amp; first action</strong> &mdash; How did they arrive? What did they do first?<br>
+          2. <strong style="color: var(--success-text);">Value moments</strong> &mdash; When did they find something useful? What was it?<br>
+          3. <strong style="color: var(--warning-text);">Friction points</strong> &mdash; Where did they hesitate, go back, or get confused?<br>
+          4. <strong style="color: var(--purple-text);">Feature usage</strong> &mdash; Which features: Find, BidFlow, Intelligence, Ask Tendium, Digests?<br>
+          5. <strong style="color: var(--error-text);">Drop-off risk</strong> &mdash; Any signals they&rsquo;re disengaging or not finding value?<br><br>
+
+          <strong style="color: var(--text-primary);">Output format:</strong><br>
+          &bull; AARRR stage mapping (which stage is this session primarily in?)<br>
+          &bull; Key behaviors observed (bullet list)<br>
+          &bull; Suggested tracking event (if a clear moment should be instrumented)<br>
+          &bull; Health signal (positive / neutral / negative)
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Ongoing Audit ── -->
+    <h2>Ongoing: Monthly Audit</h2>
+
+    <div class="callout callout--success">
+      <div class="callout-label">After the initial 30 sessions</div>
+      <div class="callout-text">Watch <strong>5&ndash;10 recordings per month</strong> to check that event data still matches reality. Tracking plans decay &mdash; features change, user behavior evolves, events break silently. The monthly audit catches drift before it corrupts your Customer Graph data.</div>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Cadence</th>
+          <th>Who</th>
+          <th>What</th>
+          <th>Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Initial audit</td>
+          <td>John + Claude</td>
+          <td>30 sessions (3 cohorts &times; 10)</td>
+          <td>Filled event mapping table + AARRR stage definitions</td>
+        </tr>
+        <tr>
+          <td>Monthly check</td>
+          <td>Gustav + Claude</td>
+          <td>5&ndash;10 random sessions</td>
+          <td>Confirmation or correction of event accuracy</td>
+        </tr>
+        <tr>
+          <td>After releases</td>
+          <td>Product + Claude</td>
+          <td>5 sessions after any major feature change</td>
+          <td>Check if new flows match expected events</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Footer ── -->
+    <footer class="page-footer">
+      <span>Recording Audit &mdash; Ground Truth Methodology</span>
+      <span>Feb 13, 2026</span>
+    </footer>
+
+  </div>
+</body>
+</html>

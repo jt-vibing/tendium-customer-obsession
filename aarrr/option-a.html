@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AARRR — Customer Journey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    /* ================================================================
+       Design System — Linear-inspired (shared)
+       ================================================================ */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ================================================================
+       Header
+       ================================================================ */
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    /* ================================================================
+       Health Badges
+       ================================================================ */
+    .health {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .health--fragmented { background: var(--error-subtle); color: var(--error-text); }
+    .health--best       { background: var(--success-subtle); color: var(--success-text); }
+    .health--mixed      { background: var(--warning-subtle); color: var(--warning-text); }
+    .health--clean      { background: var(--accent-subtle); color: var(--accent-text); }
+    .health--under      { background: var(--warning-subtle); color: var(--warning-text); }
+
+    .health-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .health--fragmented .health-dot { background: var(--error); }
+    .health--best .health-dot       { background: var(--success); }
+    .health--mixed .health-dot      { background: var(--warning); }
+    .health--clean .health-dot      { background: var(--accent); }
+    .health--under .health-dot      { background: var(--warning); }
+
+    /* ================================================================
+       Owner (inline in header)
+       ================================================================ */
+    .owner {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ================================================================
+       Procurement Banner
+       ================================================================ */
+    .pd-banner {
+      background: var(--purple-subtle);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--purple-text);
+      margin-bottom: 36px;
+    }
+
+    .pd-banner__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+
+    .pd-banner strong { font-weight: 700; }
+
+    /* ================================================================
+       Narrative Flow
+       ================================================================ */
+    .narrative {
+      position: relative;
+      padding-left: 36px;
+    }
+
+    .narrative::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 28px;
+      bottom: 28px;
+      width: 2px;
+      background: var(--border-strong);
+      border-radius: 1px;
+    }
+
+    .narr-stage {
+      position: relative;
+      padding: 0 0 48px;
+    }
+
+    .narr-stage:last-child {
+      padding-bottom: 0;
+    }
+
+    .narr-dot {
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      background: var(--base-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .narr-dot__inner {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .narr-dot--red .narr-dot__inner    { background: var(--error); }
+    .narr-dot--green .narr-dot__inner  { background: var(--success); }
+    .narr-dot--yellow .narr-dot__inner { background: var(--warning); }
+    .narr-dot--blue .narr-dot__inner   { background: var(--accent); }
+
+    .narr-dot--red    { border-color: var(--error); }
+    .narr-dot--green  { border-color: var(--success); }
+    .narr-dot--yellow { border-color: var(--warning); }
+    .narr-dot--blue   { border-color: var(--accent); }
+
+    .narr-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .narr-name {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .narr-story {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .narr-break {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--error-text);
+      background: var(--error-subtle);
+      padding: 5px 12px;
+      border-radius: var(--radius);
+    }
+
+    .narr-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success-text);
+      background: var(--success-subtle);
+      padding: 5px 12px;
+      border-radius: var(--radius);
+    }
+
+    /* ================================================================
+       Milestone Flow (primary scannable element) + Tooltips
+       ================================================================ */
+    .milestones {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-bottom: 8px;
+    }
+
+    .ms-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 99px;
+      background: var(--surface-bg);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      position: relative;
+      cursor: default;
+    }
+
+    [data-tip] {
+      position: relative;
+      cursor: default;
+    }
+
+    [data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: normal;
+      max-width: 260px;
+      width: max-content;
+      text-align: center;
+      z-index: 10;
+      box-shadow: var(--shadow-md);
+      pointer-events: none;
+    }
+
+    .ms-arrow {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin: 0 4px;
+    }
+
+    /* ================================================================
+       Sources footnote
+       ================================================================ */
+    .sources {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .sources span {
+      color: var(--text-secondary);
+    }
+
+    /* ================================================================
+       Success Metric (per stage)
+       ================================================================ */
+    .success-metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-left: 8px;
+    }
+
+    .narr-bottom {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ================================================================
+       Insight Callouts
+       ================================================================ */
+    .insights-section {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .insights-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+    }
+
+    .insight {
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .insight:last-child { margin-bottom: 0; }
+
+    .insight-accent { background: var(--accent-subtle); }
+    .insight-purple { background: var(--purple-subtle); }
+    .insight-warning { background: var(--warning-subtle); }
+
+    .insight-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .insight-accent .insight-label { color: var(--accent-text); }
+    .insight-purple .insight-label { color: var(--purple-text); }
+    .insight-warning .insight-label { color: var(--warning-text); }
+
+    .insight-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    /* ================================================================
+       Footer
+       ================================================================ */
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 56px;
+    }
+
+    .page-footer span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ================================================================
+       Responsive
+       ================================================================ */
+    @media (max-width: 768px) {
+      .page { padding: 28px 16px 60px; }
+      .header-title { font-size: 24px; }
+      .narr-name { font-size: 18px; }
+
+      .page-footer {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <header>
+      <div class="header-badge">AARRR Journey</div>
+      <h1 class="header-title">Customer Journey</h1>
+      <p class="header-subtitle">Where the journey flows, where it breaks, and why Procurement Data is the thread that holds it together.</p>
+    </header>
+
+    <!-- Procurement Data banner -->
+    <div class="pd-banner">
+      <span class="pd-banner__dot"></span>
+      <span><strong>Procurement Data</strong> is woven through every stage &mdash; 90K+ award decisions, the only signal no competitor has.</span>
+    </div>
+
+    <!-- Journey narrative -->
+    <div class="narrative">
+
+      <!-- Acquire -->
+      <div class="narr-stage">
+        <div class="narr-dot narr-dot--red"><span class="narr-dot__inner"></span></div>
+        <div class="narr-head">
+          <span class="narr-name">Acquire</span>
+          <span class="health health--fragmented"><span class="health-dot"></span>Fragmented</span>
+          <span class="owner">Marketing + Sales + Product + Commercial Ops</span>
+        </div>
+        <p class="narr-story">Someone visits tendium.com. Google Analytics sees a session. Segment fires an event. PostHog logs a pageview. But none of them know <em>which company</em> just showed up. Seven tools watch the door &mdash; nobody knows who walked in.</p>
+        <div class="milestones">
+          <span class="ms-pill" data-tip="Any known company not yet qualified">Prospect</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Hit marketing engagement score (content, webinars, forms)">MQL</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Signed up for trial (any trial signup)">PQL</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Sales accepted lead and is actively working it">SQL</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Deal created in HubSpot">Opportunity</span>
+        </div>
+        <div class="sources">Sources: <span>Procurement Data</span> &middot; <span>HubSpot</span> &middot; <span>PostHog</span> &middot; <span>GA</span> &middot; <span>Segment</span> &middot; <span>Vainu</span></div>
+        <div class="narr-bottom">
+          <span class="narr-break">&#9888; Visitor &rarr; prospect is a black box</span>
+          <span class="success-metric">&#9679; New Opportunities (Deals)</span>
+        </div>
+      </div>
+
+      <!-- Activate -->
+      <div class="narr-stage">
+        <div class="narr-dot narr-dot--green"><span class="narr-dot__inner"></span></div>
+        <div class="narr-head">
+          <span class="narr-name">Activate</span>
+          <span class="health health--best"><span class="health-dot"></span>Best covered</span>
+          <span class="owner">Product + Marketing</span>
+        </div>
+        <p class="narr-story">Once they sign up, things click. PostHog tracks trial-to-paid conversion with real product usage data. Postmark measures whether they&rsquo;re opening the tender digest &mdash; the first real value moment. This is Tendium&rsquo;s cleanest stage.</p>
+        <div class="milestones">
+          <span class="ms-pill" data-tip="User creates a Tendium account">Sign Up</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="User found a relevant tender in Find">Active User</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Company with &ge;1 user on qualified bids assessed by Tendium">Active Company</span>
+        </div>
+        <div class="sources">Sources: <span>PostHog</span> &middot; <span>Postmark</span></div>
+        <div class="narr-bottom">
+          <span class="narr-ok">&#10003; Fewest tools, clearest signal</span>
+          <span class="success-metric">&#9679; Time to First Find</span>
+        </div>
+      </div>
+
+      <!-- Retain -->
+      <div class="narr-stage">
+        <div class="narr-dot narr-dot--yellow"><span class="narr-dot__inner"></span></div>
+        <div class="narr-head">
+          <span class="narr-name">Retain</span>
+          <span class="health health--mixed"><span class="health-dot"></span>Mixed</span>
+          <span class="owner">CS + Product</span>
+        </div>
+        <p class="narr-story">PostHog sees usage drop. Postmark notices fewer opens. HubSpot logs a support ticket. Each system screams &ldquo;churn risk&rdquo; independently &mdash; but nobody triangulates the signals. A customer can go quiet across all three before anyone notices.</p>
+        <div class="milestones">
+          <span class="ms-pill" data-tip="Company is using the product regularly">Active</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Using multiple key features: Find, Win (bid placement), Intelligence (insights)">Adopted</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Compound health score above threshold (usage + NPS + renewal proximity)">Healthy</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Usage drop + low NPS + approaching renewal + support tickets">At-Risk</span>
+        </div>
+        <div class="sources">Sources: <span>PostHog</span> &middot; <span>Postmark</span> &middot; <span>Procurement Data</span> &middot; <span>Garba</span> &middot; <span>Younium</span></div>
+        <div class="narr-bottom">
+          <span class="narr-break">&#9888; No unified churn signal</span>
+          <span class="success-metric" data-tip="Cohort retention is the leading indicator for PLS motion — if week-4 drops, NRR follows 6 months later">&#9679; NRR</span>
+        </div>
+      </div>
+
+      <!-- Revenue -->
+      <div class="narr-stage">
+        <div class="narr-dot narr-dot--blue"><span class="narr-dot__inner"></span></div>
+        <div class="narr-head">
+          <span class="narr-name">Revenue</span>
+          <span class="health health--clean"><span class="health-dot"></span>Clean</span>
+          <span class="owner">RevOps + Sales + CS</span>
+        </div>
+        <p class="narr-story">Younium holds the truth: 42M SEK ARR across 1,376 subscriptions. OneFlow manages contracts. Fortnox handles the books. The data is clean and trustworthy &mdash; but it lives in a vault, disconnected from the usage and engagement signals that predict expansion.</p>
+        <div class="milestones">
+          <span class="ms-pill" data-tip="Revenue from brand new logos">New ARR</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Upsell, cross-sell, price increases on existing customers">Expansion</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Existing customers renewing at the same level">Renewal</span>
+          <span class="ms-arrow">&rarr;</span>
+          <span class="ms-pill" data-tip="Downgrades + lost customers">Contraction / Churn</span>
+        </div>
+        <div class="sources">Sources: <span>Younium</span> &middot; <span>OneFlow</span> &middot; <span>Fortnox</span></div>
+        <div class="narr-bottom">
+          <span class="narr-break">&#9888; Revenue data isolated from usage</span>
+          <span class="success-metric">&#9679; Net New ARR</span>
+        </div>
+      </div>
+
+      <!-- Referral -->
+      <div class="narr-stage">
+        <div class="narr-dot narr-dot--yellow"><span class="narr-dot__inner"></span></div>
+        <div class="narr-head">
+          <span class="narr-name">Referral</span>
+          <span class="health health--under"><span class="health-dot"></span>Underutilized</span>
+          <span class="owner">CS + Sales</span>
+        </div>
+        <p class="narr-story">NPS is migrating from HubSpot to PostHog. Response rates are low. There&rsquo;s no referral program, no systematic way to turn happy customers into advocates. The customers winning 82% of their bids should be shouting from the rooftops &mdash; nobody&rsquo;s asking them to.</p>
+        <div class="milestones">
+          <span class="ms-pill" data-tip="Customer with high satisfaction and product engagement">Happy Customer</span>
+        </div>
+        <div class="sources">Sources: <span>PostHog</span> &middot; <span>Garba</span></div>
+        <div class="narr-bottom">
+          <span class="narr-break">&#9888; No program, no tracking</span>
+          <span class="success-metric">&#9679; NPS</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Insights -->
+    <div class="insights-section">
+      <div class="insights-title">Key Insights</div>
+
+      <div class="insight insight-purple">
+        <div class="insight-label">0.1% Signal</div>
+        <div class="insight-text"><strong>Procurement Data spans all 5 stages</strong> &mdash; the only source covering the entire journey. It&rsquo;s the acquisition signal (prospect identification), the retention signal (bid volume = business health), and the referral signal (happy high-activity customers). No competitor has this data.</div>
+      </div>
+
+      <div class="insight insight-warning">
+        <div class="insight-label">The Gap</div>
+        <div class="insight-text"><strong>Acquire is the most fragmented stage</strong> &mdash; 7 tools, none connected, no company-level visitor identification. 3 tools (GA, Segment, PostHog) overlap on website tracking. The journey from &ldquo;unknown visitor&rdquo; to &ldquo;identified prospect&rdquo; is a black box.</div>
+      </div>
+
+      <div class="insight insight-accent">
+        <div class="insight-label">Multi-Stage Tools</div>
+        <div class="insight-text"><strong>PostHog spans 4 stages</strong> (Acquire &rarr; Activate &rarr; Retain &rarr; Referral) &mdash; the natural cross-stage connection point. <strong>Garba (call recordings) is Phase 1</strong> &mdash; valuable for sentiment but raw transcripts need LLM processing.</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>AARRR Journey &mdash; Narrative Flow</span>
+      <span>Feb 12, 2026</span>
+    </footer>
+
+  </div>
+</body>
+</html>

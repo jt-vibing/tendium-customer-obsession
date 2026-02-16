@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option A: Elephant-First Visual Layout — Tendium Tendium Customer Graph</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --orange: #EA580C;
+      --orange-subtle: rgba(234,88,12,0.10);
+      --orange-text: #C2410C;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --orange: #FB923C;
+      --orange-subtle: rgba(251,146,60,0.12);
+      --orange-text: #FDBA74;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ---- Section Heading ---- */
+    .section-heading {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+      margin-top: 56px;
+    }
+
+    /* ================================================
+       SECTION 1 — HERO: THE ELEPHANT
+       ================================================ */
+    .hero {
+      margin-bottom: 16px;
+    }
+
+    .hero blockquote {
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      border-left: 3px solid var(--border-strong);
+      padding: 16px 20px;
+      margin: 0 0 28px 0;
+      background: var(--elevated-bg);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .hero blockquote cite {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-style: normal;
+    }
+
+    .hero-statement {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    .hero-statement span {
+      color: var(--accent);
+    }
+
+    /* Metric badges row */
+    .metric-badges {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .metric-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 4px 14px;
+      border-radius: 100px;
+    }
+
+    .metric-badge--accent {
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+    }
+
+    .metric-badge--purple {
+      background: var(--purple-subtle);
+      color: var(--purple-text);
+    }
+
+    .metric-badge--success {
+      background: var(--success-subtle);
+      color: var(--success-text);
+    }
+
+    /* 3x3 Elephant Grid */
+    .elephant-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .dept-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 10px 10px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dept-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+
+    .dept-card--sell::before {
+      background: var(--accent);
+    }
+
+    .dept-card--build::before {
+      background: var(--purple);
+    }
+
+    .dept-card__name {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+      color: var(--text-primary);
+    }
+
+    .dept-card__sees {
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Center cell — THE CUSTOMER */
+    .dept-card--center {
+      background: var(--accent);
+      border-color: var(--accent);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 10px;
+    }
+
+    [data-theme="dark"] .dept-card--center {
+      background: var(--accent);
+    }
+
+    .dept-card--center::before {
+      display: none;
+    }
+
+    .dept-card--center .dept-card__name {
+      color: #FFFFFF;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    .dept-card--center .dept-card__sees {
+      color: rgba(255,255,255,0.78);
+      font-size: 10.5px;
+      font-style: italic;
+    }
+
+    .dept-card--empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .dept-card--empty::before {
+      display: none;
+    }
+
+    /* ================================================
+       SECTION 2 — THREE FRACTURES
+       ================================================ */
+    .fractures-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .fracture-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fracture-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .fracture-card__title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .severity-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .severity-badge--amber {
+      background: var(--warning-subtle);
+      color: var(--warning-text);
+    }
+
+    .severity-badge--red {
+      background: var(--error-subtle);
+      color: var(--error-text);
+    }
+
+    .fracture-card__desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .fracture-card__evidence {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-style: italic;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: auto;
+    }
+
+    .fractures-note {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 16px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ================================================
+       SECTION 3 — METRICS TRIANGLE
+       ================================================ */
+    .triangle-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-top: 8px;
+    }
+
+    .triangle-top {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .triangle-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .metric-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .metric-card--top {
+      max-width: 280px;
+      width: 100%;
+    }
+
+    .metric-card__number {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .metric-card__number--accent { color: var(--accent); }
+    .metric-card__number--purple { color: var(--purple); }
+    .metric-card__number--success { color: var(--success); }
+
+    .metric-card__label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .metric-card__desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Connection labels */
+    .triangle-connections {
+      position: relative;
+      height: 0;
+    }
+
+    .connection-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: -12px;
+      margin-bottom: 12px;
+      padding: 0 20px;
+    }
+
+    .connection-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+      background: var(--base-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .connection-label--center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .triangle-edge-labels {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      margin-bottom: 20px;
+    }
+
+    .triangle-edge-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    .triangle-bottom-label {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .triangle-bottom-label span {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+    }
+
+    .nrr-callout {
+      background: var(--surface-bg);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .nrr-callout strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ================================================
+       SECTION 4 — DATA ARCHITECTURE
+       ================================================ */
+    .arch-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .arch-column {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      position: relative;
+    }
+
+    .arch-column::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .arch-column--sources::before { background: var(--accent); }
+    .arch-column--process::before { background: var(--purple); }
+    .arch-column--graph::before { background: var(--success); }
+
+    .arch-column__layer {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .arch-column__title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .arch-column__subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .arch-column__subtitle:first-of-type {
+      margin-top: 0;
+    }
+
+    .arch-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .arch-list li {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      line-height: 1.45;
+    }
+
+    .arch-list li::before {
+      content: '\2022';
+      margin-right: 6px;
+      color: var(--text-tertiary);
+    }
+
+    .arch-note {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-style: italic;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
+
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+      font-size: 20px;
+      color: var(--text-tertiary);
+      font-weight: 300;
+    }
+
+    /* ================================================
+       SECTION 5 — VENN DIAGRAM
+       ================================================ */
+    .venn-container {
+      position: relative;
+      height: 280px;
+      max-width: 480px;
+      margin: 0 auto 20px;
+    }
+
+    .venn-circle {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      top: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .venn-circle--sell {
+      background: var(--accent-subtle);
+      left: 30px;
+      padding-left: 28px;
+      padding-right: 70px;
+      border: 2px solid rgba(94,106,210,0.2);
+    }
+
+    [data-theme="dark"] .venn-circle--sell {
+      border-color: rgba(123,131,235,0.25);
+    }
+
+    .venn-circle--build {
+      background: var(--purple-subtle);
+      left: 150px;
+      padding-left: 70px;
+      padding-right: 28px;
+      border: 2px solid rgba(124,58,237,0.2);
+    }
+
+    [data-theme="dark"] .venn-circle--build {
+      border-color: rgba(167,139,250,0.25);
+    }
+
+    .venn-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .venn-circle--sell .venn-label {
+      color: var(--accent-text);
+    }
+
+    .venn-circle--build .venn-label {
+      color: var(--purple-text);
+    }
+
+    .venn-items {
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .venn-overlap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      width: 150px;
+      padding-top: 10px;
+    }
+
+    .venn-overlap__label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .venn-overlap__items {
+      font-size: 10px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .venn-overlap__note {
+      font-size: 9.5px;
+      color: var(--text-tertiary);
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    .venn-below {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* ================================================
+       SECTION 6 — WIN CRITERIA
+       ================================================ */
+    .win-callout {
+      background: var(--success-subtle);
+      border: 1px solid rgba(22,163,74,0.15);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-top: 56px;
+    }
+
+    [data-theme="dark"] .win-callout {
+      border-color: rgba(74,222,128,0.15);
+    }
+
+    .win-callout__label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--success-text);
+      margin-bottom: 8px;
+    }
+
+    .win-callout__text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* ================================================
+       SECTION 7 — DETAILS ACCORDION
+       ================================================ */
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+
+    details summary {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 12px 0;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details summary::before {
+      content: '\25B6';
+      font-size: 9px;
+      color: var(--text-tertiary);
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    details summary:hover {
+      color: var(--accent-text);
+    }
+
+    details .details-content {
+      padding: 4px 0 16px 18px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Features 2x2 grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .feature-item {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .feature-item__name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .feature-item__desc {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Constraints list */
+    .constraint-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 6px;
+    }
+
+    .constraint-list li {
+      padding: 3px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .constraint-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 6px;
+    }
+
+    .constraint-tag--hard {
+      background: var(--error-subtle);
+      color: var(--error-text);
+    }
+
+    .constraint-tag--soft {
+      background: var(--warning-subtle);
+      color: var(--warning-text);
+    }
+
+    /* Non-goals list */
+    .nongoal-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 6px;
+    }
+
+    .nongoal-list li {
+      padding: 3px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .nongoal-list li::before {
+      content: '\2717';
+      color: var(--error);
+      margin-right: 8px;
+      font-weight: 700;
+    }
+
+    /* ================================================
+       FOOTER
+       ================================================ */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 56px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ================================================
+       RESPONSIVE
+       ================================================ */
+    @media (max-width: 640px) {
+      .page-container {
+        padding: 28px 16px 60px;
+      }
+
+      .hero-statement {
+        font-size: 18px;
+      }
+
+      .elephant-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+      }
+
+      .dept-card--empty {
+        display: none;
+      }
+
+      .fractures-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .triangle-top {
+        margin-bottom: 12px;
+      }
+
+      .triangle-bottom {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .metric-card--top {
+        max-width: 100%;
+      }
+
+      .triangle-edge-labels {
+        gap: 40px;
+      }
+
+      .arch-flow {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .arch-arrow {
+        padding: 8px 0;
+        font-size: 18px;
+        transform: rotate(90deg);
+      }
+
+      .venn-container {
+        height: 340px;
+      }
+
+      .venn-circle {
+        width: 190px;
+        height: 190px;
+      }
+
+      .venn-circle--sell {
+        left: 10px;
+      }
+
+      .venn-circle--build {
+        left: 120px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+
+    <!-- ============================
+         SECTION 1 — HERO: THE ELEPHANT
+         ============================ -->
+    <section class="hero">
+      <blockquote>
+        A group of blind men heard that a strange animal had been brought to the town, but none of them were aware of its shape and form. Each touched a different part. Each was certain they understood the whole.
+        <cite>Farnam Street, via ancient Indian parable</cite>
+      </blockquote>
+
+      <p class="hero-statement">At Tendium, the elephant is <span>the customer</span>.</p>
+
+      <!-- Metric badges -->
+      <div class="metric-badges">
+        <span class="metric-badge metric-badge--accent">100M SEK</span>
+        <span class="metric-badge metric-badge--purple">WAC</span>
+        <span class="metric-badge metric-badge--success">PCM</span>
+      </div>
+
+      <!-- 3x3 Elephant Grid -->
+      <div class="elephant-grid">
+        <!-- Row 1 -->
+        <div class="dept-card dept-card--build">
+          <div class="dept-card__name">Product</div>
+          <div class="dept-card__sees">Sees: Feature adoption, errors, activation</div>
+        </div>
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">CS</div>
+          <div class="dept-card__sees">Sees: Health scores, call sentiment</div>
+        </div>
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">Sales</div>
+          <div class="dept-card__sees">Sees: Pipeline, contract value</div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">Leadership</div>
+          <div class="dept-card__sees">Sees: Aggregated reports from all systems</div>
+        </div>
+        <div class="dept-card dept-card--center">
+          <div class="dept-card__name">THE CUSTOMER</div>
+          <div class="dept-card__sees">The whole elephant</div>
+        </div>
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">Marketing</div>
+          <div class="dept-card__sees">Sees: MQLs, conversions, campaigns</div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">C.Ops</div>
+          <div class="dept-card__sees">Sees: BOWTIE funnel, commercial ops</div>
+        </div>
+        <div class="dept-card dept-card--sell">
+          <div class="dept-card__name">RevOps</div>
+          <div class="dept-card__sees">Sees: Process metrics, funnel stages</div>
+        </div>
+        <div class="dept-card dept-card--empty"></div>
+      </div>
+    </section>
+
+    <!-- ============================
+         SECTION 2 — THREE FRACTURES
+         ============================ -->
+    <h2 class="section-heading">THREE FRACTURES</h2>
+    <div class="fractures-grid">
+      <div class="fracture-card">
+        <div class="fracture-card__header">
+          <span class="fracture-card__title">Definitions &amp; Types</span>
+          <span class="severity-badge severity-badge--amber">AMBER</span>
+        </div>
+        <p class="fracture-card__desc">Sales says organic leads are 20% of pipeline. Marketing says 5%. CS can't agree on "activated." Leadership has three different ARR figures depending on which system they pull from.</p>
+        <p class="fracture-card__evidence">Every alignment meeting degenerates into a definition argument instead of a decision.</p>
+      </div>
+
+      <div class="fracture-card">
+        <div class="fracture-card__header">
+          <span class="fracture-card__title">Silos &amp; Confusion</span>
+          <span class="severity-badge severity-badge--red">RED</span>
+        </div>
+        <p class="fracture-card__desc">CS analyzed 191 Garba calls in isolation. Hugo manually assembles data from 3+ systems. Product ships features without knowing which customers use them.</p>
+        <p class="fracture-card__evidence">Decisions made on partial data. Nobody trusts anyone else's numbers.</p>
+      </div>
+
+      <div class="fracture-card">
+        <div class="fracture-card__header">
+          <span class="fracture-card__title">Sources of Data</span>
+          <span class="severity-badge severity-badge--red">RED</span>
+        </div>
+        <p class="fracture-card__desc">9+ systems with no shared join key. Stripe feeds Younium which feeds HubSpot which feeds reports. Each intermediary adds noise and loses fidelity.</p>
+        <p class="fracture-card__evidence">A customer in billing is a different entity than a customer in product analytics.</p>
+      </div>
+    </div>
+    <p class="fractures-note">These three fractures are parallel, not sequential. The Tendium Customer Graph addresses all three simultaneously.</p>
+
+    <!-- ============================
+         SECTION 3 — METRICS TRIANGLE
+         ============================ -->
+    <h2 class="section-heading">THE METRICS TRIANGLE</h2>
+    <div class="triangle-container">
+      <div class="triangle-top">
+        <div class="metric-card metric-card--top">
+          <div class="metric-card__number metric-card__number--accent">100M</div>
+          <div class="metric-card__label">SEK New ARR</div>
+          <p class="metric-card__desc">3x growth from ~53M base. ~2,825 new companies needed at Core ACV (35,400 SEK/yr). Split: 33M SE + 33M NO/FI + 33M DE.</p>
+        </div>
+      </div>
+
+      <div class="triangle-edge-labels">
+        <span class="triangle-edge-label">engagement &rarr; revenue</span>
+        <span class="triangle-edge-label">companies &rarr; money</span>
+      </div>
+
+      <div class="triangle-bottom">
+        <div class="metric-card">
+          <div class="metric-card__number metric-card__number--purple">WAC</div>
+          <div class="metric-card__label">Weekly Active Companies</div>
+          <p class="metric-card__desc">Defined by Find engagement -- at least one user viewed, saved, or dismissed a tender that week. Decomposes: new WAC (activation), retained WAC (retention), WAC by tier (expansion signal). Replaces WAU.</p>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card__number metric-card__number--success">PCM</div>
+          <div class="metric-card__label">Paying Companies by Market</div>
+          <p class="metric-card__desc">Count of companies on active paid plans, per market (SE/NO/FI/DE). WAC:PCM ratio = trial conversion health. ARR:PCM = effective ACV. "100 deals in Germany" = PCM-DE target.</p>
+        </div>
+      </div>
+
+      <div class="triangle-bottom-label">
+        <span>conversion health</span>
+      </div>
+
+      <div class="nrr-callout">
+        <strong>NRR 120%</strong> demoted to diagnostic beneath ARR -- it explains WHY ARR is growing (expansion vs. new logos) but isn't top-line at 3x hyper-growth where new logo velocity dominates.
+      </div>
+    </div>
+
+    <!-- ============================
+         SECTION 4 — DATA ARCHITECTURE
+         ============================ -->
+    <h2 class="section-heading">DATA ARCHITECTURE</h2>
+    <div class="arch-flow">
+      <!-- Column 1: Raw Sources -->
+      <div class="arch-column arch-column--sources">
+        <div class="arch-column__layer">Layer 1 -- Sources</div>
+        <div class="arch-column__title">Go to Source</div>
+        <ul class="arch-list">
+          <li>Stripe (payments)</li>
+          <li>PostHog (product usage)</li>
+          <li>Procurement Data (bids -- unique to Tendium)</li>
+          <li>Call recordings (raw)</li>
+          <li>Postmark (emails)</li>
+          <li>Younium (subscriptions)</li>
+        </ul>
+        <p class="arch-note">Bypass intermediaries. Query Stripe directly, not Younium's abstraction. Pull raw call transcripts, not AI summaries.</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">&rarr;</div>
+
+      <!-- Column 2: Normalize & Process -->
+      <div class="arch-column arch-column--process">
+        <div class="arch-column__layer">Layer 2 -- CDP + AI</div>
+        <div class="arch-column__title">PostHog + Modal</div>
+        <div class="arch-column__subtitle">PostHog</div>
+        <ul class="arch-list">
+          <li>Identity resolution (company-level)</li>
+          <li>Data warehouse (7yr history)</li>
+          <li>60+ source connectors</li>
+        </ul>
+        <div class="arch-column__subtitle">Modal</div>
+        <ul class="arch-list">
+          <li>LLM processing of raw transcripts</li>
+          <li>Fuzzy company matching (join key)</li>
+          <li>Data quality checks</li>
+          <li>Agent workflows</li>
+        </ul>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">&rarr;</div>
+
+      <!-- Column 3: The Graph -->
+      <div class="arch-column arch-column--graph">
+        <div class="arch-column__layer">Layer 3 -- Interface</div>
+        <div class="arch-column__title">Tendium Customer Graph</div>
+        <ul class="arch-list">
+          <li>Unified company entity</li>
+          <li>Department-specific lenses (5 views)</li>
+          <li>Quality indicators on every metric</li>
+          <li>Definition negotiation layer</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================
+         SECTION 5 — WHERE SELL MEETS BUILD
+         ============================ -->
+    <h2 class="section-heading">WHERE SELL MEETS BUILD</h2>
+    <div class="venn-container">
+      <div class="venn-circle venn-circle--sell">
+        <div class="venn-label">SELL (C)</div>
+        <div class="venn-items">ARR, churn risk, deal stage, contract value</div>
+      </div>
+      <div class="venn-circle venn-circle--build">
+        <div class="venn-label">BUILD (P)</div>
+        <div class="venn-items">Feature adoption, activation, error rates</div>
+      </div>
+      <div class="venn-overlap">
+        <div class="venn-overlap__label">C&cap;P -- The Insight</div>
+        <div class="venn-overlap__items">
+          Why did they churn? = billing + usage drop<br>
+          Who to upsell? = tier + engagement
+        </div>
+        <div class="venn-overlap__note">Procurement Data sits in BOTH circles</div>
+      </div>
+    </div>
+    <p class="venn-below">The graph's reason to exist: connecting commercial data with product data. Questions that matter REQUIRE both sides.</p>
+
+    <!-- ============================
+         SECTION 6 — WIN CRITERIA
+         ============================ -->
+    <div class="win-callout">
+      <div class="win-callout__label">WIN CRITERIA</div>
+      <p class="win-callout__text">By March 6 (Week 4), at least 3 department leads independently use the customer compass for a real decision about a real account -- AND we can report PCM for at least 2 markets.</p>
+    </div>
+
+    <!-- ============================
+         SECTION 7 — DETAILS ACCORDION
+         ============================ -->
+    <h2 class="section-heading">DETAILS</h2>
+
+    <details>
+      <summary>ICP -- Who This Serves</summary>
+      <div class="details-content">
+        ~30 people across CS, Sales, Marketing, Product, and Leadership who make customer-facing decisions daily. They lose 3+ hours/week on manual data assembly. The real cost isn't time -- it's wrong decisions on partial data at a company sprinting toward 100M SEK.
+      </div>
+    </details>
+
+    <details>
+      <summary>Features -- V1 MVP</summary>
+      <div class="details-content">
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-item__name">Entity View</div>
+            <div class="feature-item__desc">One company, one card. Five department lenses. Every metric shows source + quality.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item__name">Procurement Intel</div>
+            <div class="feature-item__desc">Bid history, win rates, payment volumes, sector overlap.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item__name">Quality Signals</div>
+            <div class="feature-item__desc">Green (trusted), yellow (directional), red (unreliable), grey (missing).</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item__name">Definition Negotiation</div>
+            <div class="feature-item__desc">Shared definitions with agreed/proposed/disputed status.</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Constraints</summary>
+      <div class="details-content">
+        <ul class="constraint-list">
+          <li>6-week sprint (ends ~March 20) <span class="constraint-tag constraint-tag--hard">HARD</span></li>
+          <li>Procurement Data as primary source <span class="constraint-tag constraint-tag--hard">HARD</span></li>
+          <li>No HubSpot centralization <span class="constraint-tag constraint-tag--hard">HARD</span></li>
+          <li>Mobile-friendly <span class="constraint-tag constraint-tag--hard">HARD</span></li>
+          <li>Start with 3 data sources max <span class="constraint-tag constraint-tag--soft">SOFT</span></li>
+          <li>PostHog tracking incomplete <span class="constraint-tag constraint-tag--soft">SOFT</span></li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Non-Goals</summary>
+      <div class="details-content">
+        <ul class="nongoal-list">
+          <li>Not a dashboard (entity-first, not chart-first)</li>
+          <li>Not a HubSpot replacement</li>
+          <li>Not a data warehouse</li>
+          <li>Not a product feature (internal tooling only)</li>
+          <li>Not a WAU counter (company-level value, not individual logins)</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- ============================
+         FOOTER
+         ============================ -->
+    <div class="footer">
+      <span>Option A -- Elephant-First</span>
+      <span>Tendium Tendium Customer Graph &middot; Feb 2026</span>
+    </div>
+  </div>
+
+  <!-- Theme Sync Script -->
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+</body>
+</html>

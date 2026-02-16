@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Sources — Customer Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --bg-elevated: #F7F8F8;
+      --bg-surface: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.10);
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.08);
+      --warning: #D97706;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.08);
+      --orange: #EA580C;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0A0A0B;
+      --bg-elevated: #111114;
+      --bg-surface: #18181C;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.12);
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.10);
+      --warning: #FBBF24;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.10);
+      --orange: #FB923C;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 680px;
+    }
+
+    .moat-banner {
+      background: linear-gradient(135deg, var(--accent-subtle), var(--purple-subtle));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .moat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .moat-icon svg { width: 20px; height: 20px; }
+
+    .moat-content h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .moat-content p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .source-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: box-shadow 200ms ease, border-color 200ms ease;
+    }
+
+    .source-card:hover {
+      box-shadow: var(--shadow);
+      border-color: var(--border-strong);
+    }
+
+    .source-card.moat {
+      background: linear-gradient(to bottom, var(--accent-subtle), transparent);
+      border-color: var(--accent);
+    }
+
+    .source-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .source-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .source-type {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+    }
+
+    .source-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--accent-subtle);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .source-badge.moat {
+      background: var(--accent);
+      color: white;
+    }
+
+    .source-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .source-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: var(--bg-surface);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .source-join {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      background: var(--bg-surface);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .source-join strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Data Sources</h1>
+      <p>7 unified sources across all versions. Stitched by org_nr. The moat: Procurement + Company Groups.</p>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Applies To</div>
+      <div style="display: flex; gap: 8px;">
+        <span style="font-size: 12px; padding: 4px 10px; background: var(--accent-subtle); color: var(--accent); border-radius: 4px; font-weight: 600;">All Versions</span>
+        <span style="font-size: 12px; padding: 4px 10px; background: var(--bg-surface); color: var(--text-tertiary); border-radius: 4px;">V1, V2, V3, V4</span>
+      </div>
+    </div>
+
+    <div class="moat-banner">
+      <div class="moat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="moat-content">
+        <h3>The 0.1% Differentiator</h3>
+        <p><strong>Procurement Data + Company Groups</strong> is the unfair advantage. No competitor has access to 90,000 Nordic award decisions or the Allabolag company graph. This is the moat.</p>
+      </div>
+    </div>
+
+    <div class="source-grid">
+
+      <!-- Procurement Data -->
+      <div class="source-card moat">
+        <div class="source-header">
+          <div>
+            <div class="source-name">Procurement Data</div>
+            <div class="source-type">Tendium Core</div>
+          </div>
+          <div class="source-badge moat">MOAT</div>
+        </div>
+        <div class="source-desc">
+          Nordic procurement decisions — who won what contract, when, and for how much. Enables TAM sizing, warm lead identification, and competitive intelligence. No other B2G company has this.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">Awards</div>
+            <div class="stat-value">90,000</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Pipeline</div>
+            <div class="stat-value">14,000</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>org_nr</strong> (supplier + buyer)</div>
+      </div>
+
+      <!-- Company Groups -->
+      <div class="source-card moat">
+        <div class="source-header">
+          <div>
+            <div class="source-name">Company Groups</div>
+            <div class="source-type">Allabolag</div>
+          </div>
+          <div class="source-badge moat">MOAT</div>
+        </div>
+        <div class="source-desc">
+          100K Swedish companies mapped to parent corporations. Powers ultra-warm lead hypothesis: if Company A wins a tender, Companies B-Z in the same group are high-intent prospects.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">Companies</div>
+            <div class="stat-value">100K</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Coverage</div>
+            <div class="stat-value">Sweden</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>org_nr</strong> (parent mapping)</div>
+      </div>
+
+      <!-- Younium -->
+      <div class="source-card">
+        <div class="source-header">
+          <div>
+            <div class="source-name">Younium</div>
+            <div class="source-type">Subscription & Billing</div>
+          </div>
+          <div class="source-badge">SOURCE</div>
+        </div>
+        <div class="source-desc">
+          Subscription management and billing system. The single source of truth for ARR, MRR, plan tiers, contract terms, and renewal dates. All revenue flows through Younium.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">ARR</div>
+            <div class="stat-value">42M SEK</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Subscriptions</div>
+            <div class="stat-value">1,376</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>org_nr</strong> (customer ID)</div>
+      </div>
+
+      <!-- PostHog -->
+      <div class="source-card">
+        <div class="source-header">
+          <div>
+            <div class="source-name">PostHog</div>
+            <div class="source-type">Product Analytics</div>
+          </div>
+          <div class="source-badge" style="background:var(--purple-subtle);color:var(--purple);">MCP</div>
+        </div>
+        <div class="source-desc">
+          Product usage and behavioral analytics via MCP Server. Tracks logins, feature adoption, search queries, saved filters, and BidFlow usage. Powers health scoring and churn prediction.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">WAC</div>
+            <div class="stat-value">5,000</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Events/day</div>
+            <div class="stat-value">~50K</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>org_nr</strong> (company property)</div>
+      </div>
+
+      <!-- Garba -->
+      <div class="source-card">
+        <div class="source-header">
+          <div>
+            <div class="source-name">Garba</div>
+            <div class="source-type">Call Intelligence</div>
+          </div>
+          <div class="source-badge">SOURCE</div>
+        </div>
+        <div class="source-desc">
+          Sales and CS meeting recordings with full transcripts, AI summaries, and MEDDIC insights. Captures context that CRMs miss — champion concerns, renewal blockers, expansion signals.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">Meetings</div>
+            <div class="stat-value">13,437</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Coverage</div>
+            <div class="stat-value">7 teams</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>domain → org_nr</strong> (needs mapping)</div>
+      </div>
+
+      <!-- HubSpot -->
+      <div class="source-card">
+        <div class="source-header">
+          <div>
+            <div class="source-name">HubSpot</div>
+            <div class="source-type">CRM</div>
+          </div>
+          <div class="source-badge" style="background:var(--purple-subtle);color:var(--purple);">MCP</div>
+        </div>
+        <div class="source-desc">
+          Sales CRM and support ticketing via MCP Server. Tracks deals, contacts, pipeline stages, support tickets, and manual notes. Complements (doesn't replace) Customer Graph.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">Contacts</div>
+            <div class="stat-value">~8K</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Deals</div>
+            <div class="stat-value">~2K</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>org_nr</strong> (custom property)</div>
+      </div>
+
+      <!-- Postmark -->
+      <div class="source-card">
+        <div class="source-header">
+          <div>
+            <div class="source-name">Postmark</div>
+            <div class="source-type">Email Delivery</div>
+          </div>
+          <div class="source-badge">SOURCE</div>
+        </div>
+        <div class="source-desc">
+          Transactional email platform for tender digests. Tracks email opens, clicks, and bounces. Signals engagement with procurement content beyond product logins.
+        </div>
+        <div class="source-stats">
+          <div class="stat">
+            <div class="stat-label">Sends/month</div>
+            <div class="stat-value">~60K</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Open rate</div>
+            <div class="stat-value">~42%</div>
+          </div>
+        </div>
+        <div class="source-join">Join: <strong>email → org_nr</strong> (user mapping)</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

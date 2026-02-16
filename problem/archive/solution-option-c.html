@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option C — Hero Statement + Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --purple: #7C3AED;
+      --success: #10B981;
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 48px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .option-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    /* Hero Statement - Left Aligned */
+    .hero-statement {
+      margin-bottom: 40px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    /* Architecture Grid - Compact 2x2 + Featured */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+      max-width: 700px;
+    }
+
+    .arch-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .arch-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+
+    .arch-card--sources::before { background: var(--accent); }
+    .arch-card--platform::before { background: var(--purple); }
+    .arch-card--intelligence::before { background: var(--success); }
+    .arch-card--teams::before { background: var(--accent); }
+    .arch-card--agents::before { background: #F59E0B; }
+
+    .arch-card--featured {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    .arch-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .arch-card-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .arch-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+    }
+
+    .arch-card-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Hypothesis Box */
+    .hypothesis-box {
+      background: var(--accent-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .hypothesis-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .hypothesis-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .arch-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .arch-card--featured {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="option-badge">Option C — Hero + Architecture</div>
+    <h1>Solution</h1>
+
+    <!-- Hero Statement -->
+    <div class="hero-statement">
+      <div class="hero-title">One customer. One truth. Every team.</div>
+      <div class="hero-subtitle">Stop waiting on fractured data. Tendium Customer Graph unifies fragmented tools into one searchable view — delivering complete customer stories with source traceability, adapted for every team.</div>
+    </div>
+
+    <!-- Architecture Section -->
+    <div class="section-title">How It Works</div>
+
+    <div class="arch-grid">
+      <div class="arch-card arch-card--sources">
+        <div class="arch-card-header">
+          <div class="arch-card-icon">📊</div>
+          <div class="arch-card-title">Sources</div>
+        </div>
+        <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+      </div>
+
+      <div class="arch-card arch-card--platform">
+        <div class="arch-card-header">
+          <div class="arch-card-icon">🔗</div>
+          <div class="arch-card-title">Data Platform</div>
+        </div>
+        <div class="arch-card-body">Unified customer records, matched across systems</div>
+      </div>
+
+      <div class="arch-card arch-card--intelligence">
+        <div class="arch-card-header">
+          <div class="arch-card-icon">🧠</div>
+          <div class="arch-card-title">Intelligence</div>
+        </div>
+        <div class="arch-card-body">LLM Q&A, Pattern detection, Search, Briefs</div>
+      </div>
+
+      <div class="arch-card arch-card--teams">
+        <div class="arch-card-header">
+          <div class="arch-card-icon">👥</div>
+          <div class="arch-card-title">7 Teams</div>
+        </div>
+        <div class="arch-card-body">Sales, CS, Marketing, Product, Leadership, C.Ops, RevOps</div>
+      </div>
+
+      <div class="arch-card arch-card--agents arch-card--featured">
+        <div class="arch-card-header">
+          <div class="arch-card-icon">🤖</div>
+          <div class="arch-card-title">AI Agents</div>
+        </div>
+        <div class="arch-card-body">Autonomous intelligence that analyzes patterns, generates briefs, detects opportunities, and surfaces insights — reasoning across unified customer data</div>
+      </div>
+    </div>
+
+    <!-- Hypothesis -->
+    <div class="hypothesis-box">
+      <div class="hypothesis-label">Falsifiable Hypothesis</div>
+      <div class="hypothesis-text">If we eliminate fractured data, conflicting definitions, and data silos in one searchable view — teams will decide in minutes instead of days, stop building spreadsheets, and take action immediately.</div>
+    </div>
+  </div>
+</body>
+</html>

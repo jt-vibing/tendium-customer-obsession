@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design — Build Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+    }
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    .step-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .placeholder-card {
+      background: var(--surface-bg);
+      border: 1px dashed var(--border-strong);
+      border-radius: 10px;
+      padding: 40px;
+      text-align: center;
+    }
+    .placeholder-card p {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="step-badge">03 &mdash; Design</span>
+    <h1>Design</h1>
+    <p class="subtitle">Design system, component library, and interaction patterns.</p>
+    <div class="placeholder-card">
+      <p>Content goes here. This tab will contain the design system tokens, component library, and visual/interaction specifications.</p>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+</body>
+</html>

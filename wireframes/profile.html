@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adlibris AB — Customer Profile — Tendium Customer Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  </script>
+  <style>
+    /* Design System */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .dark-toggle {
+      padding: 8px 12px;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+    }
+
+    .breadcrumb a {
+      color: var(--accent-text);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    /* Profile Header */
+    .profile-header {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .profile-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .profile-title h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .profile-org-nr {
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-tertiary);
+    }
+
+    .profile-badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-tier {
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+    }
+
+    .health-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--success-subtle);
+      border-radius: var(--radius);
+    }
+
+    .health-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .health-score {
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--success-text);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      padding: 16px;
+      background: var(--base-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 12px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+      background: var(--hover);
+    }
+
+    .tab.active {
+      color: var(--accent-text);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Content Cards */
+    .content-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .content-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th {
+      text-align: left;
+      padding: 12px;
+      background: var(--surface-bg);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table td {
+      padding: 12px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .trend-positive {
+      color: var(--success-text);
+    }
+
+    .trend-negative {
+      color: var(--error-text);
+    }
+
+    .activity-item {
+      padding: 16px;
+      background: var(--base-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+    }
+
+    .activity-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .activity-type {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-text);
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .activity-content {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .punch-card-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: var(--elevated-bg);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      width: fit-content;
+    }
+
+    .punch-card-view {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .punch-card-view.active {
+      background: var(--base-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <a href="index.html" class="logo">Customer Graph</a>
+      <button class="dark-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+    </nav>
+
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="search.html">Search</a> / <span>Adlibris AB</span>
+      </div>
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-title-row">
+          <div class="profile-title">
+            <h1>Adlibris AB</h1>
+            <div class="profile-org-nr">556406-1616</div>
+          </div>
+          <div class="profile-badges">
+            <div class="health-badge">
+              <div class="health-dot"></div>
+              <span class="health-score">92/100</span>
+            </div>
+            <div class="badge badge-tier">Scale</div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">ARR</div>
+            <div class="metric-value">127K SEK</div>
+            <div class="metric-sub">+18% YoY</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Contract End</div>
+            <div class="metric-value">2027-06</div>
+            <div class="metric-sub">18 months remaining</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">NRR</div>
+            <div class="metric-value">124%</div>
+            <div class="metric-sub">Expanding</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Win Rate</div>
+            <div class="metric-value">82%</div>
+            <div class="metric-sub">Above avg (68%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab(0)">Overview</button>
+        <button class="tab" onclick="switchTab(1)">Procurement</button>
+        <button class="tab" onclick="switchTab(2)">Usage</button>
+        <button class="tab" onclick="switchTab(3)">Calls</button>
+        <button class="tab" onclick="switchTab(4)">Punch Cards</button>
+      </div>
+
+      <!-- Tab Content 1: Overview -->
+      <div class="tab-content active">
+        <div class="content-card">
+          <h3>Recent Activity</h3>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">Procurement Award</span>
+              <span class="activity-time">2 days ago</span>
+            </div>
+            <div class="activity-content">
+              Won tender: "Library Management System" — 450K SEK, Stockholm Libraries
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">CS Call</span>
+              <span class="activity-time">1 week ago</span>
+            </div>
+            <div class="activity-content">
+              QBR with Anna Svensson (Procurement Manager) — Positive sentiment, discussed upsell opportunities
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">Usage Milestone</span>
+              <span class="activity-time">2 weeks ago</span>
+            </div>
+            <div class="activity-content">
+              Reached 50 active users milestone — +40% from last quarter
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h3>Quick Stats</h3>
+          <div class="stat-row">
+            <span class="stat-label">Active Users (Last 30d)</span>
+            <span class="stat-value trend-positive">52 (+8)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Support Tickets (Last 30d)</span>
+            <span class="stat-value">3</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Last Login</span>
+            <span class="stat-value">Today, 09:14</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Procurement Bids (Last 90d)</span>
+            <span class="stat-value trend-positive">12 (+3)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Procurement -->
+      <div class="tab-content">
+        <div class="content-card">
+          <h3>Procurement Performance</h3>
+          <div class="stat-row">
+            <span class="stat-label">Total Bids (All Time)</span>
+            <span class="stat-value">87</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Awards Won</span>
+            <span class="stat-value trend-positive">71 (82% win rate)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Total B2G Revenue</span>
+            <span class="stat-value">0.9M SEK</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Primary Sectors</span>
+            <span class="stat-value">Education, Publishing, Libraries</span>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h3>Recent Awards (Last 90 Days)</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tender Title</th>
+                <th>Date</th>
+                <th>Value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Library Management System</td>
+                <td>2026-02-10</td>
+                <td>450K SEK</td>
+                <td><span class="trend-positive">Won</span></td>
+              </tr>
+              <tr>
+                <td>Digital Book Platform</td>
+                <td>2026-01-28</td>
+                <td>320K SEK</td>
+                <td><span class="trend-positive">Won</span></td>
+              </tr>
+              <tr>
+                <td>Educational Content License</td>
+                <td>2026-01-15</td>
+                <td>180K SEK</td>
+                <td><span class="trend-negative">Lost</span></td>
+              </tr>
+              <tr>
+                <td>E-Learning Resources</td>
+                <td>2025-12-20</td>
+                <td>275K SEK</td>
+                <td><span class="trend-positive">Won</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Usage -->
+      <div class="tab-content">
+        <div class="content-card">
+          <h3>Usage Trends</h3>
+          <div class="stat-row">
+            <span class="stat-label">30-Day Active Users</span>
+            <span class="stat-value trend-positive">52 (+18% vs. prev. month)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">60-Day Active Users</span>
+            <span class="stat-value">48</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">90-Day Active Users</span>
+            <span class="stat-value">45</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Avg. Sessions/Week</span>
+            <span class="stat-value trend-positive">187 (+12%)</span>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h3>Feature Adoption</h3>
+          <div class="stat-row">
+            <span class="stat-label">Tender Search</span>
+            <span class="stat-value">High (92% adoption)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Saved Searches</span>
+            <span class="stat-value">High (78% adoption)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Bid Tracking</span>
+            <span class="stat-value">Medium (54% adoption)</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">API Integration</span>
+            <span class="stat-value">Low (12% adoption)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 4: Calls -->
+      <div class="tab-content">
+        <div class="content-card">
+          <h3>Recent Calls from Garba</h3>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">QBR Call</span>
+              <span class="activity-time">Feb 5, 2026 — 42 min</span>
+            </div>
+            <div class="activity-content">
+              <strong>Participants:</strong> Anna Svensson (Customer), Erik Nilsson (CS)<br>
+              <strong>Sentiment:</strong> <span class="trend-positive">Positive</span><br>
+              <strong>Topics:</strong> Upsell discussion, Feature requests, Contract renewal
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">Support Call</span>
+              <span class="activity-time">Jan 28, 2026 — 18 min</span>
+            </div>
+            <div class="activity-content">
+              <strong>Participants:</strong> Lars Johansson (Customer), Maria Lundqvist (Support)<br>
+              <strong>Sentiment:</strong> <span style="color: var(--text-secondary)">Neutral</span><br>
+              <strong>Topics:</strong> Technical issue resolution, API integration help
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-header">
+              <span class="activity-type">Onboarding Call</span>
+              <span class="activity-time">Jan 12, 2026 — 35 min</span>
+            </div>
+            <div class="activity-content">
+              <strong>Participants:</strong> Anna Svensson (Customer), Sofia Berg (CS)<br>
+              <strong>Sentiment:</strong> <span class="trend-positive">Very Positive</span><br>
+              <strong>Topics:</strong> Platform walkthrough, Best practices, Training setup
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 5: Punch Cards -->
+      <div class="tab-content">
+        <div class="punch-card-toggle">
+          <button class="punch-card-view active">Sales View</button>
+          <button class="punch-card-view">CS Health View</button>
+        </div>
+
+        <div class="content-card">
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            <strong>Note:</strong> This tab will display AI-generated punch cards. For detailed standalone views:
+          </p>
+          <div style="display: flex; gap: 12px;">
+            <a href="punch-card-sales.html" style="padding: 10px 16px; background: var(--accent); color: white; text-decoration: none; border-radius: var(--radius); font-weight: 500; font-size: 14px;">
+              View Sales Punch Card →
+            </a>
+            <a href="punch-card-cs.html" style="padding: 10px 16px; background: var(--success); color: white; text-decoration: none; border-radius: var(--radius); font-weight: 500; font-size: 14px;">
+              View CS Health Brief →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('build-hub-theme', next);
+    }
+
+    function switchTab(index) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach((tab, i) => {
+        if (i === index) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      contents.forEach((content, i) => {
+        if (i === index) {
+          content.classList.add('active');
+        } else {
+          content.classList.remove('active');
+        }
+      });
+    }
+
+    // Punch card toggle
+    const punchCardViews = document.querySelectorAll('.punch-card-view');
+    punchCardViews.forEach(view => {
+      view.addEventListener('click', () => {
+        punchCardViews.forEach(v => v.classList.remove('active'));
+        view.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

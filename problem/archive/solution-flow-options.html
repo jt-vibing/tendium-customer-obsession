@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Flow Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --purple: #7C3AED;
+      --success: #10B981;
+      --orange: #F59E0B;
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 48px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    /* Option Sections */
+    .option-section {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .option-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    /* Common card styles */
+    .arch-card {
+      background: var(--base-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .arch-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+
+    .arch-card--sources::before { background: var(--accent); }
+    .arch-card--platform::before { background: var(--purple); }
+    .arch-card--agents::before { background: var(--orange); }
+    .arch-card--intelligence::before { background: var(--success); }
+    .arch-card--teams::before { background: var(--accent); }
+
+    .arch-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .arch-card-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .arch-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+    }
+
+    .arch-card-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .arch-arrow {
+      font-size: 20px;
+      color: var(--border-strong);
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* Option 1: Single Row Linear Flow */
+    .flow-option-1 {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .flow-option-1 .arch-card {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .flow-option-1 .arch-card--featured {
+      flex: 1.5;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    /* Option 2: Vertical Stack */
+    .flow-option-2 {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .flow-option-2 .arch-card--featured {
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    .flow-option-2 .arch-arrow {
+      align-self: center;
+    }
+
+    /* Option 3: Two-Row Clear Flow */
+    .flow-option-3 {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .flow-option-3-row {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .flow-option-3 .arch-card {
+      flex: 1;
+    }
+
+    .flow-option-3 .arch-card--featured {
+      flex: 2;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    .flow-option-3 .divider-arrow {
+      text-align: center;
+      font-size: 24px;
+      color: var(--border-strong);
+      margin: 8px 0;
+    }
+
+    /* Option 4: Pipeline/Funnel */
+    .flow-option-4 {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .flow-option-4 .arch-card {
+      min-height: 120px;
+    }
+
+    .flow-option-4 .arch-card--featured {
+      grid-column: span 1;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    /* Option 5: Compact Grid */
+    .flow-option-5 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 700px;
+    }
+
+    .flow-option-5 .arch-card--featured {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04));
+      border-color: rgba(245,158,11,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .flow-option-1,
+      .flow-option-3-row,
+      .flow-option-4 {
+        flex-direction: column;
+      }
+
+      .flow-option-4 {
+        display: flex;
+      }
+
+      .flow-option-1 .arch-arrow,
+      .flow-option-3 .arch-arrow,
+      .flow-option-4 .arch-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">Architecture Flow Options</h1>
+    <p class="page-subtitle">Better visual flow for the architecture cards. All keep AI Agents prominent.</p>
+
+    <!-- Option 1: Single Row Linear -->
+    <div class="option-section">
+      <div class="option-label">Option 1 — Single Row Linear (Clean Flow)</div>
+      <div class="section-title">How It Works</div>
+
+      <div class="flow-option-1">
+        <div class="arch-card arch-card--sources">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">📊</div>
+            <div class="arch-card-title">Sources</div>
+          </div>
+          <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--platform">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🔗</div>
+            <div class="arch-card-title">Data Platform</div>
+          </div>
+          <div class="arch-card-body">Unified customer records, matched across systems</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--agents arch-card--featured">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🤖</div>
+            <div class="arch-card-title">AI Agents</div>
+          </div>
+          <div class="arch-card-body">Autonomous intelligence that analyzes patterns, generates briefs, detects opportunities</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--teams">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">👥</div>
+            <div class="arch-card-title">7 Teams</div>
+          </div>
+          <div class="arch-card-body">Sales, CS, Marketing, Product, Leadership, C.Ops, RevOps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 2: Vertical Stack -->
+    <div class="option-section">
+      <div class="option-label">Option 2 — Vertical Stack (No Scrolling, Clear Progression)</div>
+      <div class="section-title">How It Works</div>
+
+      <div class="flow-option-2">
+        <div class="arch-card arch-card--sources">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">📊</div>
+            <div class="arch-card-title">Sources</div>
+          </div>
+          <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+        </div>
+
+        <div class="arch-arrow">↓</div>
+
+        <div class="arch-card arch-card--platform">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🔗</div>
+            <div class="arch-card-title">Data Platform</div>
+          </div>
+          <div class="arch-card-body">Unified customer records, matched across systems</div>
+        </div>
+
+        <div class="arch-arrow">↓</div>
+
+        <div class="arch-card arch-card--agents arch-card--featured">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🤖</div>
+            <div class="arch-card-title">AI Agents</div>
+          </div>
+          <div class="arch-card-body">Autonomous intelligence that analyzes patterns, generates briefs, detects opportunities, and surfaces insights — reasoning across unified customer data</div>
+        </div>
+
+        <div class="arch-arrow">↓</div>
+
+        <div class="arch-card arch-card--teams">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">👥</div>
+            <div class="arch-card-title">7 Teams</div>
+          </div>
+          <div class="arch-card-body">Sales, CS, Marketing, Product, Leadership, C.Ops, RevOps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 3: Two-Row with Clear Divider -->
+    <div class="option-section">
+      <div class="option-label">Option 3 — Two-Row Split (Data Layer → Intelligence Layer)</div>
+      <div class="section-title">How It Works</div>
+
+      <div class="flow-option-3">
+        <div class="flow-option-3-row">
+          <div class="arch-card arch-card--sources">
+            <div class="arch-card-header">
+              <div class="arch-card-icon">📊</div>
+              <div class="arch-card-title">Sources</div>
+            </div>
+            <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <div class="arch-card arch-card--platform">
+            <div class="arch-card-header">
+              <div class="arch-card-icon">🔗</div>
+              <div class="arch-card-title">Data Platform</div>
+            </div>
+            <div class="arch-card-body">Unified customer records, matched across systems</div>
+          </div>
+        </div>
+
+        <div class="divider-arrow">↓</div>
+
+        <div class="flow-option-3-row">
+          <div class="arch-card arch-card--agents arch-card--featured">
+            <div class="arch-card-header">
+              <div class="arch-card-icon">🤖</div>
+              <div class="arch-card-title">AI Agents</div>
+            </div>
+            <div class="arch-card-body">Autonomous intelligence that analyzes patterns, generates briefs, detects opportunities, and surfaces insights</div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <div class="arch-card arch-card--teams">
+            <div class="arch-card-header">
+              <div class="arch-card-icon">👥</div>
+              <div class="arch-card-title">7 Teams</div>
+            </div>
+            <div class="arch-card-body">Sales, CS, Marketing, Product, Leadership, C.Ops, RevOps</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 4: Pipeline with All Arrows -->
+    <div class="option-section">
+      <div class="option-label">Option 4 — Full Pipeline (All Steps Visible)</div>
+      <div class="section-title">How It Works</div>
+
+      <div class="flow-option-4">
+        <div class="arch-card arch-card--sources">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">📊</div>
+            <div class="arch-card-title">Sources</div>
+          </div>
+          <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--platform">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🔗</div>
+            <div class="arch-card-title">Platform</div>
+          </div>
+          <div class="arch-card-body">Unified customer records</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--agents arch-card--featured">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🤖</div>
+            <div class="arch-card-title">AI Agents</div>
+          </div>
+          <div class="arch-card-body">Autonomous intelligence analyzes, generates, detects</div>
+        </div>
+
+        <div class="arch-arrow">→</div>
+
+        <div class="arch-card arch-card--teams">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">👥</div>
+            <div class="arch-card-title">7 Teams</div>
+          </div>
+          <div class="arch-card-body">Adapted views for every team</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 5: Compact Grid -->
+    <div class="option-section">
+      <div class="option-label">Option 5 — Compact 2x2 Grid (Space Efficient)</div>
+      <div class="section-title">How It Works</div>
+
+      <div class="flow-option-5">
+        <div class="arch-card arch-card--sources">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">📊</div>
+            <div class="arch-card-title">Sources</div>
+          </div>
+          <div class="arch-card-body">Younium, PostHog, Garba, Postmark, Procurement + more</div>
+        </div>
+
+        <div class="arch-card arch-card--platform">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🔗</div>
+            <div class="arch-card-title">Data Platform</div>
+          </div>
+          <div class="arch-card-body">Unified customer records, matched across systems</div>
+        </div>
+
+        <div class="arch-card arch-card--agents arch-card--featured">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">🤖</div>
+            <div class="arch-card-title">AI Agents</div>
+          </div>
+          <div class="arch-card-body">Autonomous intelligence that analyzes patterns, generates briefs, detects opportunities, and surfaces insights — reasoning across unified customer data</div>
+        </div>
+
+        <div class="arch-card arch-card--teams">
+          <div class="arch-card-header">
+            <div class="arch-card-icon">👥</div>
+            <div class="arch-card-title">7 Teams</div>
+          </div>
+          <div class="arch-card-body">Sales, CS, Marketing, Product, Leadership, C.Ops, RevOps</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

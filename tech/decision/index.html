@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Log — Customer Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --bg-elevated: #F7F8F8;
+      --bg-surface: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.10);
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.08);
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0A0A0B;
+      --bg-elevated: #111114;
+      --bg-surface: #18181C;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.12);
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.10);
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.10);
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.08);
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 680px;
+    }
+
+    .decision-list {
+      display: grid;
+      gap: 24px;
+    }
+
+    .decision-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: box-shadow 200ms ease;
+    }
+
+    .decision-card:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .decision-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .decision-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .decision-date {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .decision-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-approved { background: var(--success-subtle); color: var(--success); }
+    .badge-deferred { background: var(--warning-subtle); color: var(--warning); }
+    .badge-rejected { background: var(--error-subtle); color: var(--error); }
+    .badge-active { background: var(--accent-subtle); color: var(--accent); }
+
+    .decision-section {
+      margin-bottom: 16px;
+    }
+
+    .decision-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .decision-section h4 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .decision-section p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .decision-section ul {
+      list-style: none;
+      padding-left: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .decision-section li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .decision-section li::before {
+      content: '•';
+      position: absolute;
+      left: 6px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .decision-section li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Decision Log</h1>
+      <p>Key architectural decisions — some version-specific, some across all versions.</p>
+    </div>
+
+    <div style="margin-bottom: 32px;">
+      <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Decision Types</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span style="font-size: 12px; padding: 4px 10px; background: var(--accent-subtle); color: var(--accent); border-radius: 4px; font-weight: 600;">Version-Specific</span>
+        <span style="font-size: 11px; padding: 4px 8px; background: var(--bg-surface); color: var(--text-tertiary); border-radius: 4px;">V1 Deferred, V2 Archived, V3 Active, V4 Planned</span>
+        <span style="font-size: 12px; padding: 4px 10px; background: var(--success-subtle); color: var(--success); border-radius: 4px; font-weight: 600;">Cross-Version</span>
+        <span style="font-size: 11px; padding: 4px 8px; background: var(--bg-surface); color: var(--text-tertiary); border-radius: 4px;">Data sources, Search, DB, Model</span>
+      </div>
+    </div>
+
+    <div class="decision-list">
+
+      <!-- Decision: V3 MCP over V2 Custom App -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">Build V3 (MCP Server) instead of V2 (Custom App)</div>
+            <div class="decision-date">Feb 14, 2026</div>
+          </div>
+          <div class="decision-badge badge-approved">APPROVED</div>
+        </div>
+        <div class="decision-section">
+          <h4>Context</h4>
+          <p>V2 Customer Agent proved the concept — Claude can reason across 7 data sources. But 60% of code (2,484 lines) was rebuilding what Claude.ai already provides: chat UI, streaming, message history, dark mode.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Ship V3 as an MCP server with 21 tools. Use Claude.ai (or Code, or Cowork) as the interface. Zero UI to maintain. Stakeholders already use Claude daily.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Rationale</h4>
+          <ul>
+            <li><strong>Moat is data, not UI:</strong> The differentiator is procurement data + company groups, not the interface.</li>
+            <li><strong>Faster to ship:</strong> 21 tools vs 4,150 lines of React. Focus on stitching logic, not CSS.</li>
+            <li><strong>Multi-surface by default:</strong> Works in Claude.ai, Claude Code, future Cowork — no rebuild needed.</li>
+            <li><strong>Lower maintenance:</strong> Anthropic maintains the UI. We maintain data + tools.</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Alternatives Considered</h4>
+          <ul>
+            <li><strong>V2 Custom App:</strong> Full control over UX, but 60% of code is reinventing Claude. High maintenance.</li>
+            <li><strong>V4 Hybrid:</strong> Dashboard + AI copilot. Best of both worlds, but requires building both. Deferred to post-V1.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Decision: 2-Tier Search (No Embeddings) -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">2-Tier Search (Keyword + Claude NL)</div>
+            <div class="decision-date">Feb 13, 2026</div>
+          </div>
+          <div class="decision-badge badge-approved">APPROVED</div>
+        </div>
+        <div class="decision-section">
+          <h4>Context</h4>
+          <p>With 1,376 customers, we need fast search. Options: (1) keyword only, (2) keyword + embeddings, (3) keyword + Claude NL.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Tier 1: Client-side keyword .filter() for instant results. Tier 2: Claude Sonnet 4.5 for complex NL queries. Defer Voyage AI embeddings until >5K customers.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Rationale</h4>
+          <ul>
+            <li><strong>Context fits in prompt:</strong> 1,376 customers × ~200 tokens = 275K tokens. Fits in Claude's 200K context with room for tools.</li>
+            <li><strong>Keyword handles 80% of queries:</strong> "SKF", "Sweden", "Light plan" are instant with .filter().</li>
+            <li><strong>Claude NL handles complex queries:</strong> "at-risk accounts with <5 logins and renewal in 60 days" → Claude chains getUsage + getRenewalPipeline.</li>
+            <li><strong>Simpler architecture:</strong> No vector DB, no embedding pipeline, no semantic drift issues.</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>When to Add Embeddings</h4>
+          <p>If customer count grows >5K, add Voyage AI embeddings for semantic search. pgvector in Supabase is already available.</p>
+        </div>
+      </div>
+
+      <!-- Decision: Supabase (Postgres) for Data -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">Supabase (Postgres) as Database</div>
+            <div class="decision-date">Feb 13, 2026</div>
+          </div>
+          <div class="decision-badge badge-approved">APPROVED</div>
+        </div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Use Supabase Postgres for Customer Graph database. Copy data from source systems (Younium, PostHog, etc.) on scheduled syncs. Read-only architecture.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Rationale</h4>
+          <ul>
+            <li><strong>Managed Postgres:</strong> Production-ready, auto-backups, pgvector available if needed later.</li>
+            <li><strong>Read-only safety:</strong> Customer Graph never writes to Younium/HubSpot/etc. Prevents data corruption.</li>
+            <li><strong>Query-time stitching:</strong> Join by org_nr on every query. Always fresh, no stale aggregates.</li>
+            <li><strong>Fast setup:</strong> Supabase Auth available for V1, even though prototype skips auth.</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Alternatives Considered</h4>
+          <ul>
+            <li><strong>Direct API calls to Younium/PostHog:</strong> Too slow (5-7 API calls per customer). Need local cache.</li>
+            <li><strong>SQLite cache:</strong> Works for prototype, but not multi-user ready. Supabase scales better.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Decision: Claude Sonnet 4.5 (Not Haiku) -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">Claude Sonnet 4.5 for All Queries</div>
+            <div class="decision-date">Feb 13, 2026</div>
+          </div>
+          <div class="decision-badge badge-approved">APPROVED</div>
+        </div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Use Claude Sonnet 4.5 for both search (NL query understanding) and punch cards (role-specific intelligence). Do not use Haiku.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Rationale</h4>
+          <ul>
+            <li><strong>Tool use quality:</strong> Sonnet 4.5 chains tools correctly. Haiku misses context and over-calls.</li>
+            <li><strong>Punch card depth:</strong> Punch cards require reasoning across 3-5 tools. Sonnet handles this; Haiku struggles.</li>
+            <li><strong>Cost acceptable:</strong> ~$3 per 1M input tokens. At 10K queries/month, cost = $30-60/month. Worth the quality.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Decision: No Auth for Prototype -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">Skip Auth for Prototype (Add for V1)</div>
+            <div class="decision-date">Feb 12, 2026</div>
+          </div>
+          <div class="decision-badge badge-approved">APPROVED</div>
+        </div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>MCP V3 prototype has no authentication. Anyone with access to the MCP server config can query customer data. Add Supabase Auth for V1 production.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Rationale</h4>
+          <ul>
+            <li><strong>Speed over security for prototype:</strong> Faster to validate the concept without auth.</li>
+            <li><strong>Internal stakeholders only:</strong> Jens, Hugo, Oskar have access. Not exposed externally.</li>
+            <li><strong>Easy to add later:</strong> Supabase Auth + RLS takes <1 day to implement for V1.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Decision: Garba Domain→Org_nr Mapping -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">Build Domain→Org_nr Mapper for Garba</div>
+            <div class="decision-date">Feb 13, 2026</div>
+          </div>
+          <div class="decision-badge badge-active">IN PROGRESS</div>
+        </div>
+        <div class="decision-section">
+          <h4>Context</h4>
+          <p>Garba API returns company domains (e.g., "volvo.com") not org_nr. Need a mapping table to join Garba meetings with Younium subscriptions.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Build a domain→org_nr mapping table. Seed it from Younium + HubSpot data. Fall back to Bolagsfakta API for missing mappings.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Implementation</h4>
+          <ul>
+            <li><strong>Step 1:</strong> Extract domains from Younium billing emails (e.g., user@volvo.com → volvo.com).</li>
+            <li><strong>Step 2:</strong> Cross-reference with HubSpot company records (domain property).</li>
+            <li><strong>Step 3:</strong> For unknowns, query Bolagsfakta.se API by domain to get org_nr.</li>
+            <li><strong>Step 4:</strong> Store in domain_mapping table (domain, org_nr, source, last_verified).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Decision: V1 by March 6 (6-Week Sprint) -->
+      <div class="decision-card">
+        <div class="decision-header">
+          <div>
+            <div class="decision-title">V1 Deadline: March 6, 2026</div>
+            <div class="decision-date">Feb 10, 2026</div>
+          </div>
+          <div class="decision-badge badge-active">ACTIVE</div>
+        </div>
+        <div class="decision-section">
+          <h4>Context</h4>
+          <p>John Tan (Product Advisor) has a 6-week engagement with Tendium. V1 must ship before March 6 to ensure handoff to Jens for production rollout.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Decision</h4>
+          <p>Build V3 (MCP Server) as V1. Ship with mock data by Feb 20, real data by Feb 27, stakeholder testing by March 3. Full handoff March 6.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="decision-section">
+          <h4>Milestones</h4>
+          <ul>
+            <li><strong>Feb 14:</strong> MCP server live with 21 tools (mock data) ✓</li>
+            <li><strong>Feb 20:</strong> Real Younium + PostHog data integrated</li>
+            <li><strong>Feb 24:</strong> Garba API + domain mapping live</li>
+            <li><strong>Feb 27:</strong> All 7 sources live, 96% coverage validated</li>
+            <li><strong>March 3:</strong> Stakeholder demo (Jens, Hugo, Oskar)</li>
+            <li><strong>March 6:</strong> V1 handoff + documentation complete</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

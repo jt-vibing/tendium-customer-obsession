@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option B — Tendium Customer Graph Problem | Tendium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Section Heading ── */
+    .section-heading {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    /* ── 1. Header ── */
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .header-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .header-title-row h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* ── 2. Problem ── */
+    .callout {
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .callout-accent {
+      background: var(--accent-subtle);
+    }
+
+    .callout-surface {
+      background: var(--surface-bg);
+      border: 1px solid var(--border);
+    }
+
+    .callout-success {
+      background: var(--success-subtle);
+    }
+
+    .callout-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      margin-bottom: 6px;
+    }
+
+    .callout-success .callout-label {
+      color: var(--success-text);
+    }
+
+    .callout-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    /* ── Elephant Chips ── */
+    .elephant-diagram {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 20px 16px;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    .dept-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--base-bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 5px 12px;
+      white-space: nowrap;
+    }
+
+    .dept-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-sell { background: var(--accent); }
+    .dot-build { background: var(--purple); }
+
+    .customer-chip {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 99px;
+      padding: 6px 16px;
+      white-space: nowrap;
+    }
+
+    /* ── Sub-Problem Cards ── */
+    .problem-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .problem-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      border-left: 3px solid transparent;
+    }
+
+    .problem-card-warning { border-left-color: var(--warning); }
+    .problem-card-error { border-left-color: var(--error); }
+
+    .problem-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .problem-card-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .problem-note {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── 3. Metrics ── */
+    .metric-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .metric-number {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .metric-number-accent { color: var(--accent); }
+    .metric-number-purple { color: var(--purple); }
+    .metric-number-success { color: var(--success); }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .metric-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .metric-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      background: var(--surface-bg);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+    }
+
+    /* ── 4. ICP ── */
+    .persona-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .persona-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .persona-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .persona-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .persona-role {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .persona-quote {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      border-left: 3px solid var(--accent);
+      padding-left: 16px;
+      margin-top: 14px;
+    }
+
+    .icp-list {
+      list-style: none;
+    }
+
+    .icp-list li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .icp-list li::before {
+      content: "\2022";
+      position: absolute;
+      left: 0;
+      color: var(--text-tertiary);
+    }
+
+    /* ── 5. Solution ── */
+    .solution-paragraph {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .hypothesis-box {
+      background: var(--surface-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hypothesis-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+    }
+
+    .hypothesis-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    /* ── Architecture Diagram ── */
+    .arch-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 12px;
+    }
+
+    .arch-card {
+      flex: 1;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      border-top: 3px solid transparent;
+    }
+
+    .arch-card-accent { border-top-color: var(--accent); }
+    .arch-card-purple { border-top-color: var(--purple); }
+    .arch-card-success { border-top-color: var(--success); }
+
+    .arch-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .arch-card-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      color: var(--text-tertiary);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .arch-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.55;
+    }
+
+    /* ── 6. Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .feature-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .feature-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .feature-card-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── 7. Constraints Table ── */
+    .constraints-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .constraints-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .constraints-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+
+    .constraints-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .badge-hard {
+      color: var(--error-text);
+      background: var(--error-subtle);
+    }
+
+    .badge-soft {
+      color: var(--warning-text);
+      background: var(--warning-subtle);
+    }
+
+    /* ── 8. Non-Goals ── */
+    .non-goals-list {
+      list-style: none;
+    }
+
+    .non-goals-list li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      padding: 5px 0;
+      padding-left: 22px;
+      position: relative;
+    }
+
+    .non-goals-list li::before {
+      content: "\00D7";
+      position: absolute;
+      left: 0;
+      color: var(--error-text);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.65;
+    }
+
+    /* ── 9. Win Criteria ── */
+    .success-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--success-text);
+      margin-bottom: 6px;
+    }
+
+    .success-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    .page-footer span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .problem-cards,
+      .metric-cards,
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .arch-flow {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .arch-arrow {
+        padding: 4px 0;
+        transform: rotate(90deg);
+      }
+
+      .page-footer {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+
+      .header-title-row h1 {
+        font-size: 24px;
+      }
+
+      .constraints-table {
+        font-size: 12px;
+      }
+
+      .constraints-table th,
+      .constraints-table td {
+        padding: 8px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ────────────────────────────────
+         1. HEADER
+         ──────────────────────────────── -->
+    <header style="margin-bottom: 48px;">
+      <div class="header-badge">01 — Problem</div>
+      <div class="header-title-row">
+        <div class="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v4m0 12v4m-8-10h4m12 0h4m-2.93-7.07-2.83 2.83m-8.48 8.48-2.83 2.83m0-14.14 2.83 2.83m8.48 8.48 2.83 2.83"/>
+          </svg>
+        </div>
+        <h1>Tendium Customer Graph</h1>
+      </div>
+      <p class="header-subtitle">PRD &amp; problem brief for building a unified internal customer intelligence layer at Tendium.</p>
+    </header>
+
+    <!-- ────────────────────────────────
+         2. PROBLEM
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Problem</h2>
+
+      <div class="callout callout-accent">
+        <div class="callout-label">Core Pain</div>
+        <div class="callout-text">Every department at Tendium touches a different part of the same "elephant" — the customer — but nobody sees the whole animal. Definitions are confused, data is siloed across 9+ systems, and there's no shared source of truth.</div>
+      </div>
+
+      <!-- Elephant Chips Diagram -->
+      <div class="elephant-diagram">
+        <span class="dept-chip"><span class="dot dot-sell"></span>CS</span>
+        <span class="dept-chip"><span class="dot dot-sell"></span>Sales</span>
+        <span class="dept-chip"><span class="dot dot-sell"></span>Marketing</span>
+        <span class="customer-chip">The Customer</span>
+        <span class="dept-chip"><span class="dot dot-build"></span>Product</span>
+        <span class="dept-chip"><span class="dot dot-sell"></span>Leadership</span>
+        <span class="dept-chip"><span class="dot dot-sell"></span>RevOps</span>
+        <span class="dept-chip"><span class="dot dot-build"></span>C.Ops</span>
+      </div>
+
+      <!-- Sub-Problem Cards -->
+      <div class="problem-cards">
+        <div class="problem-card problem-card-warning">
+          <div class="problem-card-title">A &mdash; Definitions &amp; Types</div>
+          <div class="problem-card-text">Sales says organic leads are 20% of pipeline. Marketing says 5%. Three different ARR figures depending on system.</div>
+        </div>
+        <div class="problem-card problem-card-error">
+          <div class="problem-card-title">B &mdash; Silos &amp; Confusion</div>
+          <div class="problem-card-text">191 Garba calls analyzed in isolation. Hugo manually assembles data from 3+ systems weekly.</div>
+        </div>
+        <div class="problem-card problem-card-error">
+          <div class="problem-card-title">C &mdash; Sources of Data</div>
+          <div class="problem-card-text">9 systems, no join key. A customer in billing is a different entity than in product analytics.</div>
+        </div>
+      </div>
+
+      <p class="problem-note">These three problems are parallel. The Tendium Customer Graph is the forcing function for all three simultaneously.</p>
+    </section>
+
+    <!-- ────────────────────────────────
+         3. METRICS TRIANGLE
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Metrics Triangle</h2>
+
+      <div class="metric-cards">
+        <div class="metric-card">
+          <div class="metric-number metric-number-accent">100M</div>
+          <div class="metric-label">SEK New ARR</div>
+          <div class="metric-detail">3x growth. ~2,825 new companies at Core ACV (35,400 SEK/yr). Split: 33M/33M/33M across markets.</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number metric-number-purple">WAC</div>
+          <div class="metric-label">Weekly Active Companies</div>
+          <div class="metric-detail">Find engagement: viewed/saved/dismissed a tender. Decomposes into new (activation), retained (retention), by tier (expansion).</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number metric-number-success">PCM</div>
+          <div class="metric-label">Paying Companies by Market</div>
+          <div class="metric-detail">Active paid plans per market (SE/NO/FI/DE). WAC:PCM = conversion health. ARR:PCM = effective ACV.</div>
+        </div>
+      </div>
+
+      <div class="metric-note">NRR 120% demoted to diagnostic beneath ARR — at 3x hyper-growth, new logo velocity matters more.</div>
+    </section>
+
+    <!-- ────────────────────────────────
+         4. IDEAL CUSTOMER PROFILE
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Ideal Customer Profile</h2>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar">T</div>
+          <div>
+            <div class="persona-name">The Tendium Team Member</div>
+            <div class="persona-role">CS lead, Sales rep, Marketing ops, PM, or C-suite — anyone who needs to answer customer questions daily without building a spreadsheet</div>
+          </div>
+        </div>
+        <div class="persona-quote">"I spend 2&ndash;4 hours every week pulling data from 3+ systems just to answer 'which accounts need attention right now?' — and half the time the numbers don't match."</div>
+      </div>
+
+      <ul class="icp-list">
+        <li>~30 people across departments making customer-facing decisions daily</li>
+        <li>Lost productivity: 30 &times; 3hrs &times; 46wks = 4,140 hrs/yr (~2M SEK wasted)</li>
+        <li>Real cost: wrong decisions on partial data at a company targeting 100M SEK</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────
+         5. SOLUTION
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Solution</h2>
+
+      <p class="solution-paragraph">An AI-first internal customer compass — a unified entity model that stitches together Procurement Data (#1), PostHog (#2), and Younium (#3) into a single company-level view, accessible through department-specific lenses.</p>
+
+      <div class="hypothesis-box">
+        <div class="hypothesis-label">Falsifiable Hypothesis</div>
+        <div class="hypothesis-text">If we give every team a single source of customer truth with department-specific views and agreed-upon definitions, teams will make daily decisions from the graph — because 10 seconds beats 30 minutes of manual assembly.</div>
+      </div>
+
+      <!-- Architecture Diagram -->
+      <div class="arch-flow">
+        <div class="arch-card arch-card-accent">
+          <div class="arch-card-title">Sources</div>
+          <div class="arch-card-body">Stripe, PostHog, Procurement Data, Recordings, Postmark, Younium</div>
+        </div>
+        <div class="arch-arrow">&rarr;</div>
+        <div class="arch-card arch-card-purple">
+          <div class="arch-card-title">CDP + AI</div>
+          <div class="arch-card-body">PostHog (identity, warehouse) + Modal (LLM, matching)</div>
+        </div>
+        <div class="arch-arrow">&rarr;</div>
+        <div class="arch-card arch-card-success">
+          <div class="arch-card-title">Graph</div>
+          <div class="arch-card-body">Unified entity, 5 department views, quality signals</div>
+        </div>
+      </div>
+
+      <p class="arch-note">"Go to source" principle: query Stripe directly, not Younium abstractions. Pull raw transcripts, not AI summaries.</p>
+    </section>
+
+    <!-- ────────────────────────────────
+         6. FEATURES — V1 MVP
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Features — V1 MVP</h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-card-title">Entity View</div>
+          <div class="feature-card-text">One company, one card. Five department lenses. Every metric shows source + quality level.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">Procurement Intel</div>
+          <div class="feature-card-text">Bid history, win rates, payment volumes, sector overlap from procurement data.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">Quality Signals</div>
+          <div class="feature-card-text">Green (trusted), yellow (directional), red (unreliable), grey (missing). Forces transparency.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">Definition Negotiation</div>
+          <div class="feature-card-text">Shared definitions with agreed/proposed/disputed status. Alignment before numbers.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────
+         7. CONSTRAINTS
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Constraints</h2>
+
+      <table class="constraints-table">
+        <thead>
+          <tr>
+            <th>Constraint</th>
+            <th>Type</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>6-week sprint (ends ~March 20)</td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Advisory engagement has fixed end date.</td>
+          </tr>
+          <tr>
+            <td>Procurement Data as primary source</td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Covers customers AND non-customers.</td>
+          </tr>
+          <tr>
+            <td>No HubSpot centralization</td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Three failed attempts. Team has rejected it.</td>
+          </tr>
+          <tr>
+            <td>Mobile-friendly web app</td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Must work in meetings, on phones.</td>
+          </tr>
+          <tr>
+            <td>Sell/Build data boundary</td>
+            <td><span class="badge badge-hard">Hard</span></td>
+            <td>Customer data powers GTM. Product data powers platform. The overlap is the insight.</td>
+          </tr>
+          <tr>
+            <td>3 data sources max initially</td>
+            <td><span class="badge badge-soft">Soft</span></td>
+            <td>Procurement + PostHog + Younium.</td>
+          </tr>
+          <tr>
+            <td>PostHog tracking incomplete</td>
+            <td><span class="badge badge-soft">Soft</span></td>
+            <td>Usage data is directional, not precise.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────
+         8. NON-GOALS
+         ──────────────────────────────── -->
+    <section>
+      <h2 class="section-heading">Non-Goals</h2>
+
+      <ul class="non-goals-list">
+        <li>Not a dashboard (entity-first, not chart-first)</li>
+        <li>Not a HubSpot replacement (not building a CRM)</li>
+        <li>Not a data warehouse (stitches views at query time)</li>
+        <li>Not a product feature (internal tooling only, Sell vs Build boundary)</li>
+        <li>Not a WAU counter (company-level value, not individual logins)</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────
+         9. WIN CRITERIA
+         ──────────────────────────────── -->
+    <section>
+      <div class="callout callout-success">
+        <div class="success-label">Success =</div>
+        <div class="success-text">By March 6 (Week 4), at least 3 department leads independently open the customer compass to answer a real question about a real account — AND we can report PCM for at least 2 markets.</div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────
+         FOOTER
+         ──────────────────────────────── -->
+    <footer class="page-footer">
+      <span>Option B — Sections + Visuals</span>
+      <span>Tendium Tendium Customer Graph &middot; Feb 2026</span>
+    </footer>
+
+  </div>
+</body>
+</html>

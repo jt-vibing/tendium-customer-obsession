@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OKR &amp; Metrics — Refined to the Problem Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    /* ================================================================
+       Design System — Linear-inspired (shared)
+       ================================================================ */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ================================================================
+       Header
+       ================================================================ */
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    /* ================================================================
+       Section headings
+       ================================================================ */
+    .section-heading {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-top: 32px;
+    }
+
+    .section-subhead {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: -12px;
+      margin-bottom: 20px;
+    }
+
+    /* ================================================================
+       North Star Cards
+       ================================================================ */
+    .north-stars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .ns-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .ns-number {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .ns-unit {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .ns-current {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .ns-current strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* ================================================================
+       Gap Analysis
+       ================================================================ */
+    .gap-bar-container {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .gap-bar-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .gap-bar {
+      width: 100%;
+      height: 32px;
+      background: var(--surface-bg);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .gap-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    .gap-fill--current {
+      background: var(--accent);
+      width: 42%;
+    }
+
+    .gap-fill--nrr {
+      background: var(--success);
+      position: absolute;
+      left: 42%;
+      width: 6%;
+      top: 0;
+      opacity: 0.8;
+    }
+
+    .gap-fill--needed {
+      position: absolute;
+      left: 48%;
+      right: 0;
+      top: 0;
+      height: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 4px,
+        var(--error-subtle) 4px,
+        var(--error-subtle) 8px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--error-text);
+      letter-spacing: 0.03em;
+    }
+
+    .gap-legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .gap-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .gap-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ================================================================
+       Market Split
+       ================================================================ */
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .market-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .market-name {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .market-target {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .market-target-unit {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+
+    .market-detail {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .market-q1 {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 8px;
+    }
+
+    .market-q1--se {
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+    }
+
+    .market-q1--nofi {
+      background: var(--success-subtle);
+      color: var(--success-text);
+    }
+
+    .market-q1--next {
+      background: var(--purple-subtle);
+      color: var(--purple-text);
+    }
+
+    /* ================================================================
+       AARRR Metrics Table
+       ================================================================ */
+    .aarrr-table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 32px;
+    }
+
+    .aarrr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .aarrr-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .aarrr-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .aarrr-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .aarrr-table .stage-cell {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .aarrr-table .metric-cell {
+      font-weight: 500;
+    }
+
+    .aarrr-table .current-cell {
+      color: var(--text-tertiary);
+    }
+
+    .aarrr-table .target-cell {
+      font-weight: 600;
+    }
+
+    .aarrr-table .source-cell {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    .stage-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .stage-dot--acquire { background: var(--error); }
+    .stage-dot--activate { background: var(--success); }
+    .stage-dot--retain { background: var(--warning); }
+    .stage-dot--revenue { background: var(--accent); }
+    .stage-dot--referral { background: var(--purple); }
+
+    /* ================================================================
+       Department OKR Cards
+       ================================================================ */
+    .dept-okr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .dept-okr-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+
+    .dept-okr-card__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .dept-okr-card__name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dept-okr-card__stage-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .stage-tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .stage-tag--acquire { background: var(--error-subtle); color: var(--error-text); }
+    .stage-tag--activate { background: var(--success-subtle); color: var(--success-text); }
+    .stage-tag--retain { background: var(--warning-subtle); color: var(--warning-text); }
+    .stage-tag--revenue { background: var(--accent-subtle); color: var(--accent-text); }
+    .stage-tag--referral { background: var(--purple-subtle); color: var(--purple-text); }
+
+    .dept-okr-card__kr {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dept-okr-card__kr li {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .dept-okr-card__kr li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-strong);
+    }
+
+    /* ================================================================
+       Compass Unlock Cards
+       ================================================================ */
+    .unlock-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .unlock-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .unlock-card__stage {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: 2px;
+    }
+
+    .unlock-card__gap {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+
+    .unlock-card__gap strong {
+      color: var(--error-text);
+      font-weight: 600;
+    }
+
+    .unlock-card__enables {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .unlock-card__enables strong {
+      color: var(--success-text);
+      font-weight: 600;
+    }
+
+    .unlock-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    /* ================================================================
+       Callouts & Insights
+       ================================================================ */
+    .callout {
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .callout-accent {
+      background: var(--accent-subtle);
+      border: 1px solid rgba(94,106,210,0.15);
+    }
+
+    .callout-purple {
+      background: var(--purple-subtle);
+      border: 1px solid rgba(124,58,237,0.15);
+    }
+
+    .callout-success {
+      background: var(--success-subtle);
+      border: 1px solid rgba(22,163,74,0.12);
+    }
+
+    .callout-warning {
+      background: var(--warning-subtle);
+      border: 1px solid rgba(217,119,6,0.12);
+    }
+
+    .callout-error {
+      background: var(--error-subtle);
+      border: 1px solid rgba(220,38,38,0.10);
+    }
+
+    .callout-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .callout-accent .callout-label { color: var(--accent-text); }
+    .callout-purple .callout-label { color: var(--purple-text); }
+    .callout-success .callout-label { color: var(--success-text); }
+    .callout-warning .callout-label { color: var(--warning-text); }
+    .callout-error .callout-label { color: var(--error-text); }
+
+    .callout-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .callout-text strong {
+      font-weight: 600;
+    }
+
+    /* ================================================================
+       Math Block
+       ================================================================ */
+    .math-block {
+      background: var(--surface-bg);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .math-block strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .math-block .math-highlight {
+      color: var(--accent-text);
+      font-weight: 700;
+    }
+
+    /* ================================================================
+       Ratio Cards
+       ================================================================ */
+    .ratio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .ratio-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .ratio-formula {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-text);
+      margin-bottom: 4px;
+    }
+
+    .ratio-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .ratio-desc {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      line-height: 1.4;
+    }
+
+    /* ================================================================
+       Footer
+       ================================================================ */
+    .page-footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    /* ================================================================
+       Responsive
+       ================================================================ */
+    @media (max-width: 768px) {
+      .north-stars { grid-template-columns: 1fr; }
+      .market-grid { grid-template-columns: 1fr; }
+      .dept-okr-grid { grid-template-columns: 1fr; }
+      .ratio-grid { grid-template-columns: 1fr; }
+      .unlock-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .ns-number { font-size: 36px; }
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 32px 16px 60px; }
+      .header-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <header>
+      <div class="header-badge">OKR &amp; Metrics</div>
+      <h1 class="header-title">Refined to the Problem Space</h1>
+      <p class="header-subtitle">Mapping the 2026 OKRs against current reality, the AARRR customer journey, and what the Tendium Customer Graph unlocks at each stage.</p>
+    </header>
+
+    <!-- ────────────────────────────────
+         1. NORTH STARS
+         ──────────────────────────────── -->
+    <h2 class="section-heading">North Stars</h2>
+    <p class="section-subhead">The two numbers that define success in 2026.</p>
+
+    <div class="north-stars">
+      <div class="ns-card">
+        <div class="ns-number" style="color: var(--accent);">100M</div>
+        <div class="ns-unit">SEK New ARR</div>
+        <div class="ns-current">Current: <strong>42M</strong> subscription ARR (Younium) &middot; 1,376 subs</div>
+      </div>
+      <div class="ns-card">
+        <div class="ns-number" style="color: var(--purple);">10,000</div>
+        <div class="ns-unit">Weekly Active Users</div>
+        <div class="ns-current">&asymp; <strong>2,500 WAC</strong> (Weekly Active Companies &middot; ~4 users/co)</div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────
+         2. THE GAP
+         ──────────────────────────────── -->
+    <h2 class="section-heading">The Gap</h2>
+    <p class="section-subhead">From 42M to 100M &mdash; what needs to happen.</p>
+
+    <div class="gap-bar-container">
+      <div class="gap-bar-label">
+        <span>ARR Journey &mdash; 42M &rarr; 100M SEK</span>
+        <span style="color: var(--text-tertiary);">2026</span>
+      </div>
+      <div class="gap-bar">
+        <div class="gap-fill gap-fill--current">42M</div>
+        <div class="gap-fill gap-fill--nrr"></div>
+        <div class="gap-fill--needed">~52M net new</div>
+      </div>
+      <div class="gap-legend">
+        <div class="gap-legend-item">
+          <div class="gap-legend-dot" style="background: var(--accent);"></div>
+          Current subscription ARR
+        </div>
+        <div class="gap-legend-item">
+          <div class="gap-legend-dot" style="background: var(--success);"></div>
+          NRR expansion (110-120%)
+        </div>
+        <div class="gap-legend-item">
+          <div class="gap-legend-dot" style="background: var(--error-subtle); border: 1px solid var(--error-text);"></div>
+          Net new ARR needed
+        </div>
+      </div>
+    </div>
+
+    <div class="math-block">
+      <strong>The math:</strong> 100M &minus; 42M = 58M gap. NRR expansion (110-120%) contributes ~4-8M from existing base.<br>
+      <strong>Net new needed:</strong> ~50-54M SEK.<br>
+      At avg ACV (<span class="math-highlight">~30.5K SEK</span>): <strong>~1,640&ndash;1,770 new paying companies</strong>.<br>
+      At Core ACV (<span class="math-highlight">~35.4K SEK</span>): <strong>~1,410&ndash;1,525 new paying companies</strong>.<br>
+      <strong>Current base:</strong> 1,376 subs &rarr; need to roughly <strong>double</strong> the customer count.
+    </div>
+
+    <!-- Market split -->
+    <h2 class="section-heading">Market Split</h2>
+    <p class="section-subhead">33 / 33 / 33 &mdash; equal thirds by design.</p>
+
+    <div class="market-grid">
+      <div class="market-card">
+        <div class="market-name" style="color: var(--accent-text);">Sweden</div>
+        <div class="market-target">33M <span class="market-target-unit">SEK</span></div>
+        <div class="market-detail">~35% of current subs. Saturating. Need upsell + tier migration to extract more from existing base.</div>
+        <div class="market-q1 market-q1--se">Q1: 5.6M</div>
+      </div>
+      <div class="market-card">
+        <div class="market-name" style="color: var(--success-text);">Norway + Finland</div>
+        <div class="market-target">33M <span class="market-target-unit">SEK</span></div>
+        <div class="market-detail">Key expansion markets. Hugo: &ldquo;If we don&rsquo;t crack Norway and Finland, we fail.&rdquo; Fully launched, ramping.</div>
+        <div class="market-q1 market-q1--nofi">Q1: NO 2.0M &middot; FI 1.4M</div>
+      </div>
+      <div class="market-card">
+        <div class="market-name" style="color: var(--purple-text);">Next Market</div>
+        <div class="market-target">33M <span class="market-target-unit">SEK</span></div>
+        <div class="market-detail">Germany 1st priority (30 deals in pipeline). France &amp; UK 2nd. Data roadmap in progress.</div>
+        <div class="market-q1 market-q1--next">Q1: 0.5M + 30 DE deals</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-label">Compass Insight</div>
+      <div class="callout-text"><strong>PCM (Paying Companies by Market)</strong> is the bridge metric. ARR growth without geographic decomposition is a vanity number. The Compass shows PCM-SE, PCM-NO, PCM-FI, PCM-DE as leading indicators. When PCM-NO stalls, leadership knows before revenue dips.</div>
+    </div>
+
+    <!-- ────────────────────────────────
+         3. METRIC RATIOS
+         ──────────────────────────────── -->
+    <h2 class="section-heading">Key Ratios</h2>
+    <p class="section-subhead">Three ratios that connect the north stars to reality.</p>
+
+    <div class="ratio-grid">
+      <div class="ratio-card">
+        <div class="ratio-formula">WAC : PCM</div>
+        <div class="ratio-name">Trial Conversion Health</div>
+        <div class="ratio-desc">Are engaged companies converting to paying? Low ratio = leaky activation.</div>
+      </div>
+      <div class="ratio-card">
+        <div class="ratio-formula">ARR : PCM</div>
+        <div class="ratio-name">Effective ACV</div>
+        <div class="ratio-desc">If rising, expansion is working (NRR is healthy). Current: ~30.5K. Core target: 35.4K.</div>
+      </div>
+      <div class="ratio-card">
+        <div class="ratio-formula">WAC : ARR</div>
+        <div class="ratio-name">Monetization Efficiency</div>
+        <div class="ratio-desc">Overall engine health. More WAC + more ARR per WAC = compounding growth.</div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────
+         4. AARRR × OKR METRICS
+         ──────────────────────────────── -->
+    <h2 class="section-heading">AARRR &times; OKR Metrics</h2>
+    <p class="section-subhead">Every OKR maps to a stage. Every stage has a metric the Compass can track.</p>
+
+    <div class="aarrr-table-wrapper">
+      <table class="aarrr-table">
+        <thead>
+          <tr>
+            <th style="width: 100px;">Stage</th>
+            <th>Compass Metric</th>
+            <th>Current</th>
+            <th>Target</th>
+            <th>OKR Alignment</th>
+            <th>Data Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="stage-cell"><span class="stage-dot stage-dot--acquire"></span>Acquire</td>
+            <td class="metric-cell">Ghost TAM<br><span style="font-size:11px;color:var(--text-tertiary);">Companies in PD not yet customers</span></td>
+            <td class="current-cell">Unknown<br><span style="font-size:11px;">No visitor ID</span></td>
+            <td class="target-cell">MQL&rarr;Deal: 40%<br><span style="font-size:11px;color:var(--text-tertiary);">Webinar: 1,200</span></td>
+            <td class="source-cell">Marketing: drive quality leads<br>International: 30 DE deals</td>
+            <td class="source-cell">Procurement Data<br>HubSpot &middot; PostHog</td>
+          </tr>
+          <tr>
+            <td class="stage-cell"><span class="stage-dot stage-dot--activate"></span>Activate</td>
+            <td class="metric-cell">Time to First Find<br><span style="font-size:11px;color:var(--text-tertiary);">+ Trial completion rate</span></td>
+            <td class="current-cell">Unknown<br><span style="font-size:11px;">Tracking incomplete</span></td>
+            <td class="target-cell">&lt;3 min (95%)<br><span style="font-size:11px;color:var(--text-tertiary);">80% workflow</span></td>
+            <td class="source-cell">Product: self-service trials (10 Tier 4)<br>Product: 95% find &lt;3 min</td>
+            <td class="source-cell">PostHog<br>Postmark</td>
+          </tr>
+          <tr>
+            <td class="stage-cell"><span class="stage-dot stage-dot--retain"></span>Retain</td>
+            <td class="metric-cell">Health Score<br><span style="font-size:11px;color:var(--text-tertiary);">Usage + billing + call sentiment</span></td>
+            <td class="current-cell">NRR 110-120%<br><span style="font-size:11px;">Churn dash underused</span></td>
+            <td class="target-cell">MEDDPICC &ldquo;M&rdquo;: 35%<br><span style="font-size:11px;color:var(--text-tertiary);">NRR &ge;120%</span></td>
+            <td class="source-cell">Sales: MEDDPICC coverage<br>CS: health monitoring</td>
+            <td class="source-cell">PostHog &middot; Postmark<br>PD &middot; Garba (Phase 1)</td>
+          </tr>
+          <tr>
+            <td class="stage-cell"><span class="stage-dot stage-dot--revenue"></span>Revenue</td>
+            <td class="metric-cell">PCM by Market<br><span style="font-size:11px;color:var(--text-tertiary);">+ ARR per Sales Rep</span></td>
+            <td class="current-cell">1,376 PCM<br><span style="font-size:11px;">42M SEK ARR</span></td>
+            <td class="target-cell">~3,000+ PCM<br><span style="font-size:11px;color:var(--text-tertiary);">ARR/rep +35%</span></td>
+            <td class="source-cell">Sales: ARR per rep +35%<br>All markets: 33/33/33 split</td>
+            <td class="source-cell">Younium &middot; OneFlow<br>Fortnox</td>
+          </tr>
+          <tr>
+            <td class="stage-cell"><span class="stage-dot stage-dot--referral"></span>Referral</td>
+            <td class="metric-cell">NPS + Referral Rate<br><span style="font-size:11px;color:var(--text-tertiary);">Happy customer signals</span></td>
+            <td class="current-cell">Low response<br><span style="font-size:11px;">HubSpot cookie dep.</span></td>
+            <td class="target-cell">No OKR set<br><span style="font-size:11px;color:var(--error-text);">Gap &mdash; biggest blind spot</span></td>
+            <td class="source-cell">None currently.<br>Opportunity to define.</td>
+            <td class="source-cell">PostHog (NPS)<br>HubSpot &middot; Garba (Phase 1)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-error">
+      <div class="callout-label">Blind Spots</div>
+      <div class="callout-text"><strong>Referral has zero OKRs.</strong> At 3x growth, referral and word-of-mouth should be a major lever &mdash; especially in the Nordics where trust networks drive procurement decisions. <strong>Acquire has no company-level visitor ID</strong> &mdash; the funnel starts blind. Both are opportunities for the Compass to create visibility where none exists today.</div>
+    </div>
+
+    <!-- ────────────────────────────────
+         5. DEPARTMENT OKRs → AARRR
+         ──────────────────────────────── -->
+    <h2 class="section-heading">Department OKRs &rarr; AARRR Stages</h2>
+    <p class="section-subhead">Which department drives which stage. Overlaps = where the Compass connects silos.</p>
+
+    <div class="dept-okr-grid">
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">Marketing</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--acquire">Acquire</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>MQL &rarr; Deal conversion: 17% &rarr; 40%</li>
+          <li>Webinar registrants: 716 &rarr; 1,200</li>
+          <li>Njord plan and execution</li>
+          <li>Transition from funnel to journey focus</li>
+        </ul>
+      </div>
+
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">Product</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--activate">Activate</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>Self-service trials: 10 Tier 4 customers</li>
+          <li>95% find relevant opportunity &lt;3 min</li>
+          <li>80% of trials complete full workflow</li>
+          <li>Tracking framework implementation</li>
+        </ul>
+      </div>
+
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">Sales &amp; CS</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--acquire">Acquire</span>
+            <span class="stage-tag stage-tag--retain">Retain</span>
+            <span class="stage-tag stage-tag--revenue">Revenue</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>ARR per Sales Rep +35%</li>
+          <li>MEDDPICC &ldquo;M&rdquo; coverage: 16% &rarr; 35%</li>
+          <li>SDRs move to green (calls + meetings)</li>
+          <li>Revenue: SE 5.6M, NO 2.0M, FI 1.4M</li>
+        </ul>
+      </div>
+
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">International</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--acquire">Acquire</span>
+            <span class="stage-tag stage-tag--revenue">Revenue</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>30 deals in pipeline for Germany</li>
+          <li>15 deals for France + UK</li>
+          <li>First dedicated DE salesperson signed</li>
+          <li>Transparent lead journey metrics</li>
+        </ul>
+      </div>
+
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">Data Management</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--acquire">Acquire</span>
+            <span class="stage-tag stage-tag--activate">Activate</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>40% contract extensions in FI + NO</li>
+          <li>90% below-threshold tender coverage FI + NO</li>
+          <li>Approved data roadmap for next major market</li>
+          <li>Germany national portal implementation</li>
+        </ul>
+      </div>
+
+      <div class="dept-okr-card">
+        <div class="dept-okr-card__header">
+          <div class="dept-okr-card__name">Engineering</div>
+          <div class="dept-okr-card__stage-tags">
+            <span class="stage-tag stage-tag--activate">Activate</span>
+            <span class="stage-tag stage-tag--retain">Retain</span>
+          </div>
+        </div>
+        <ul class="dept-okr-card__kr">
+          <li>Design system for scalable frontend</li>
+          <li>Customer analytics tracking</li>
+          <li>AI communication foundation (Ask Tendium)</li>
+          <li>Enable Release 1 &amp; 2</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-accent">
+      <div class="callout-label">The Silo Pattern</div>
+      <div class="callout-text"><strong>Marketing owns Acquire. Product owns Activate. Nobody clearly owns Retain or Referral.</strong> Sales &amp; CS span 3 stages but their OKRs are revenue-weighted. The Compass creates shared visibility across stage boundaries &mdash; when Marketing generates an MQL, Product sees activation, CS sees health, and Revenue sees conversion &mdash; on the same entity.</div>
+    </div>
+
+    <!-- ────────────────────────────────
+         6. WHAT THE COMPASS UNLOCKS
+         ──────────────────────────────── -->
+    <h2 class="section-heading">What the Compass Unlocks</h2>
+    <p class="section-subhead">Per stage: the gap today and what unified intelligence enables.</p>
+
+    <div class="unlock-grid">
+      <div class="unlock-card">
+        <div class="unlock-card__stage"><span class="stage-dot stage-dot--acquire"></span>Acquire</div>
+        <div class="unlock-card__gap">
+          <div class="unlock-label">Gap today</div>
+          <strong>8 tools, zero connection.</strong> No company-level visitor ID. MQL quality contested. Ghost TAM invisible. Procurement data not used for prospecting.
+        </div>
+        <div class="unlock-card__enables">
+          <div class="unlock-label">Compass enables</div>
+          <strong>Ghost TAM surfacing</strong> &mdash; companies in procurement data that match ICP but aren&rsquo;t customers. MQL quality scoring against bid behavior. Attribution clarity.
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-card__stage"><span class="stage-dot stage-dot--activate"></span>Activate</div>
+        <div class="unlock-card__gap">
+          <div class="unlock-label">Gap today</div>
+          <strong>PostHog tracking incomplete.</strong> New platform just launched. &ldquo;Activated&rdquo; undefined. Self-service trials not measurable end-to-end.
+        </div>
+        <div class="unlock-card__enables">
+          <div class="unlock-label">Compass enables</div>
+          <strong>Shared activation definition</strong> &mdash; Library of Definitions makes &ldquo;activated&rdquo; mean one thing. Postmark as early proxy signal while tracking matures.
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-card__stage"><span class="stage-dot stage-dot--retain"></span>Retain</div>
+        <div class="unlock-card__gap">
+          <div class="unlock-label">Gap today</div>
+          <strong>Churn prediction exists but is underutilized.</strong> Call recordings (Garba) deferred to Phase 1. No compound health score (usage + billing + sentiment).
+        </div>
+        <div class="unlock-card__enables">
+          <div class="unlock-label">Compass enables</div>
+          <strong>Compound health score</strong> &mdash; usage drop + renewal approaching = actionable alert. Phase 1 adds call sentiment from Garba. MEDDPICC &ldquo;M&rdquo; from procurement data.
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-card__stage"><span class="stage-dot stage-dot--revenue"></span>Revenue</div>
+        <div class="unlock-card__gap">
+          <div class="unlock-label">Gap today</div>
+          <strong>Three different ARR figures.</strong> No geographic decomposition in real-time. Stripe is 1:1 into Younium (not a separate source). ARR per rep unmeasurable without unified entity.
+        </div>
+        <div class="unlock-card__enables">
+          <div class="unlock-label">Compass enables</div>
+          <strong>PCM by market in real-time.</strong> ARR:PCM ratio shows if expansion is working. Single ARR number from Younium. Geographic pipeline vs targets.
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-card__stage"><span class="stage-dot stage-dot--referral"></span>Referral</div>
+        <div class="unlock-card__gap">
+          <div class="unlock-label">Gap today</div>
+          <strong>No OKR. No metric. No owner.</strong> NPS has super low response rate (HubSpot cookie). Call recordings (Garba) deferred to Phase 1.
+        </div>
+        <div class="unlock-card__enables">
+          <div class="unlock-label">Compass enables</div>
+          <strong>Happy customer identification</strong> &mdash; high usage + active bidding = referral candidates. NPS migration to PostHog for in-product capture. Phase 1 adds call sentiment from Garba.
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────
+         7. THE DEFINITION PROBLEM
+         ──────────────────────────────── -->
+    <h2 class="section-heading">The Definition Problem</h2>
+    <p class="section-subhead">You can&rsquo;t hit OKRs when teams disagree on what the words mean.</p>
+
+    <div class="callout callout-purple">
+      <div class="callout-label">Definitions That Block OKR Progress</div>
+      <div class="callout-text">
+        <strong>&ldquo;Active customer&rdquo;</strong> &mdash; undefined across Product, CS, and Sales. Different meaning per department.<br>
+        <strong>&ldquo;Inbound&rdquo;</strong> &mdash; SDRs say &ldquo;I don&rsquo;t consider them inbound&rdquo; for leads they prospect. Marketing disagrees.<br>
+        <strong>&ldquo;ARR&rdquo;</strong> &mdash; three different figures depending on who you ask (subscription vs total vs bookings).<br>
+        <strong>&ldquo;MQL&rdquo;</strong> &mdash; previously drove volume, not quality. Salespeople booked on irrelevant meetings.<br>
+        <strong>&ldquo;ICP fit&rdquo;</strong> &mdash; 4 departments, 4 ICPs. Sales ignores the official one. SDR targets contradict it.<br><br>
+        Hugo: <em>&ldquo;We usually only have the data itself in mind and not how we use it.&rdquo;</em><br><br>
+        The Compass&rsquo;s <strong>Library of Definitions</strong> forces negotiation. Every metric shows agreed / proposed / disputed status. You can&rsquo;t argue about numbers when you first have to agree on what the numbers mean.
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────
+         8. SUMMARY
+         ──────────────────────────────── -->
+    <h2 class="section-heading">Summary</h2>
+
+    <div class="callout callout-success">
+      <div class="callout-label">What the Compass Makes Possible</div>
+      <div class="callout-text">
+        <strong>For 100M ARR:</strong> PCM by market gives leadership a geographic compass. Ghost TAM surfaces untapped demand. Compound health scores protect existing revenue while new markets scale.<br><br>
+        <strong>For 10K WAU:</strong> Shared activation definition means everyone counts the same way. Time-to-first-Find becomes the universal onboarding metric. WAC:PCM ratio shows if engagement converts.<br><br>
+        <strong>For every OKR:</strong> The Library of Definitions eliminates the &ldquo;whose number is right&rdquo; arguments. When Marketing&rsquo;s MQL converts to Sales&rsquo;s deal converts to CS&rsquo;s healthy customer &mdash; it&rsquo;s all the same entity, tracked from Acquire to Referral.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>OKR &amp; Metrics Refinement &mdash; Tendium Customer Graph</span>
+      <span>Feb 11, 2026 &middot; Hugo + Mareks data</span>
+    </footer>
+
+  </div>
+</body>
+</html>

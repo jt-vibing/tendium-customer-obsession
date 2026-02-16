@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V2 — Customer Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    /* ================================================================
+       CSS Custom Properties — Dark-first design
+    ================================================================ */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.10);
+      --success: #16A34A;
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #111114;
+      --surface-bg: #18181C;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --success: #4ADE80;
+    }
+
+    /* ================================================================
+       Reset & Base
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* Force dark mode for V2 mockup */
+    html {
+      background: #0A0A0B;
+    }
+
+    /* ================================================================
+       Mockup Container
+    ================================================================ */
+    .mockup-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #0A0A0B;
+      padding: 40px;
+    }
+
+    .mockup-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .mockup-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      color: #EDEDEF;
+    }
+
+    .mockup-header p {
+      font-size: 14px;
+      color: #8B8B96;
+    }
+
+    .mockup-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(167,139,250,0.14);
+      color: #A78BFA;
+      margin-bottom: 12px;
+    }
+
+    /* ================================================================
+       V2 Chat Mockup (scaled up for full-screen)
+    ================================================================ */
+    .mockup-v2 {
+      flex: 1;
+      background: #111114;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    .m-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .m-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7B83EB, #A78BFA);
+      flex-shrink: 0;
+    }
+
+    .m-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #EDEDEF;
+    }
+
+    .m-status {
+      margin-left: auto;
+      font-size: 12px;
+      color: #5C5C66;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .m-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ADE80;
+    }
+
+    .m-messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      padding-right: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .m-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .m-messages::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    .m-msg {
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 75%;
+    }
+
+    .m-msg.user {
+      background: #1B1B1F;
+      color: #EDEDEF;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .m-msg.agent {
+      background: rgba(123,131,235,0.12);
+      color: #9BA2F5;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .m-card-inline {
+      background: #18181C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 20px;
+      align-self: flex-start;
+      max-width: 80%;
+    }
+
+    .m-ci-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #EDEDEF;
+      margin-bottom: 12px;
+    }
+
+    .m-ci-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #8B8B96;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .m-ci-row:last-child {
+      border-bottom: none;
+    }
+
+    .m-ci-val {
+      color: #4ADE80;
+      font-weight: 600;
+    }
+
+    .m-ci-val.error {
+      color: #F87171;
+    }
+
+    .m-pills {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .m-pill {
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 16px;
+      background: rgba(123,131,235,0.10);
+      color: #8B8B96;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+
+    .m-pill:hover {
+      background: rgba(123,131,235,0.16);
+      color: #9BA2F5;
+      border-color: rgba(123,131,235,0.3);
+    }
+
+    .m-input-bar {
+      height: 52px;
+      background: #1B1B1F;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+    }
+
+    .m-input-icon {
+      width: 18px;
+      height: 18px;
+      color: #5C5C66;
+    }
+
+    .m-input-text {
+      flex: 1;
+      font-size: 14px;
+      color: #5C5C66;
+    }
+
+    .m-send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(123,131,235,0.14);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #7B83EB;
+      transition: all 120ms ease;
+    }
+
+    .m-send-btn:hover {
+      background: rgba(123,131,235,0.2);
+    }
+
+    .m-send-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ================================================================
+       Theme Toggle
+    ================================================================ */
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #18181C;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #8B8B96;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 120ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: #1F1F24;
+      transform: scale(1.05);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ================================================================
+       Responsive
+    ================================================================ */
+    @media (max-width: 768px) {
+      .mockup-container {
+        padding: 20px;
+      }
+      .m-msg {
+        max-width: 85%;
+      }
+      .m-card-inline {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mockup-container">
+    <div class="mockup-header">
+      <span class="mockup-badge">V2 — Archived</span>
+      <h1>Customer Agent</h1>
+      <p>AI-first chat interface with rich visual cards, HITL action buttons, and 21 tools.</p>
+    </div>
+
+    <div class="mockup-v2">
+      <div class="m-header">
+        <div class="m-avatar"></div>
+        <span class="m-title">Customer Agent</span>
+        <div class="m-status">
+          <div class="m-status-dot"></div>
+          Online
+        </div>
+      </div>
+
+      <div class="m-messages">
+        <div class="m-msg user">How's the portfolio looking?</div>
+        <div class="m-msg agent">Let me check the latest data across all 7 sources...</div>
+
+        <div class="m-card-inline">
+          <div class="m-ci-title">Portfolio Overview</div>
+          <div class="m-ci-row">
+            <span>Total ARR</span>
+            <span class="m-ci-val">42M SEK</span>
+          </div>
+          <div class="m-ci-row">
+            <span>Active Customers</span>
+            <span class="m-ci-val">1,376</span>
+          </div>
+          <div class="m-ci-row">
+            <span>NRR</span>
+            <span class="m-ci-val">112%</span>
+          </div>
+          <div class="m-ci-row">
+            <span>At-Risk Accounts</span>
+            <span class="m-ci-val error">23</span>
+          </div>
+        </div>
+
+        <div class="m-msg agent">3 accounts need immediate attention: SKF AB (health dropped to 28), Volvo Group (no usage for 14 days), and SEB (renewal in 7 days, no contact in 45 days).</div>
+
+        <div class="m-msg user">Give me call prep for SKF</div>
+        <div class="m-msg agent">Generating call prep for SKF AB...</div>
+
+        <div class="m-card-inline">
+          <div class="m-ci-title">SKF AB — Call Prep</div>
+          <div class="m-ci-row">
+            <span>Last Meeting</span>
+            <span style="color:#8B8B96">Jan 12, 2026 (Hugo)</span>
+          </div>
+          <div class="m-ci-row">
+            <span>Health Score</span>
+            <span class="m-ci-val error">28/100</span>
+          </div>
+          <div class="m-ci-row">
+            <span>Contract Value</span>
+            <span class="m-ci-val">142K SEK/year</span>
+          </div>
+          <div class="m-ci-row">
+            <span>Renewal Date</span>
+            <span style="color:#FBBF24">Mar 15, 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-pills">
+        <span class="m-pill">Churn risks</span>
+        <span class="m-pill">Renewals this month</span>
+        <span class="m-pill">Draft outreach email</span>
+        <span class="m-pill">Show usage trends</span>
+      </div>
+
+      <div class="m-input-bar">
+        <svg class="m-input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="7" cy="7" r="4"/>
+          <path d="M10 10l3 3"/>
+        </svg>
+        <div class="m-input-text">Ask about your customers...</div>
+        <button class="m-send-btn">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2L7 9M14 2L9 14L7 9M14 2L2 7L7 9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="8" cy="8" r="3"/>
+      <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none">
+      <path d="M13.2 10.5A5.5 5.5 0 015.5 2.8a5.5 5.5 0 107.7 7.7z"/>
+    </svg>
+  </button>
+
+  <script>
+    // Theme (locked to dark for V2)
+    var root = document.documentElement;
+    function getSystemTheme() { return 'dark'; }
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', 'dark');
+      var sun = document.querySelector('.icon-sun');
+      var moon = document.querySelector('.icon-moon');
+      if (sun && moon) {
+        sun.style.display = 'none';
+        moon.style.display = 'block';
+      }
+    }
+    applyTheme('dark');
+
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      // V2 is always dark - do nothing or show a message
+      console.log('V2 mockup is designed for dark mode only');
+    });
+  </script>
+
+</body>
+</html>

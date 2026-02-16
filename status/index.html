@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Status — Customer Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --bg-elevated: #F7F8F8;
+      --bg-surface: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.10);
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.08);
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --purple: #7C3AED;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0A0A0B;
+      --bg-elevated: #111114;
+      --bg-surface: #18181C;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.12);
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.10);
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.10);
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.08);
+      --purple: #A78BFA;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 720px;
+    }
+
+    .status-hero {
+      background: linear-gradient(135deg, var(--accent-subtle), var(--success-subtle));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .status-hero-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .status-hero-value {
+      font-size: 48px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .status-hero-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .progress-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .progress-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .progress-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .badge-done { background: var(--success-subtle); color: var(--success); }
+    .badge-progress { background: var(--accent-subtle); color: var(--accent); }
+    .badge-pending { background: var(--warning-subtle); color: var(--warning); }
+    .badge-blocked { background: var(--error-subtle); color: var(--error); }
+
+    .progress-bar-wrapper {
+      height: 6px;
+      background: var(--bg-surface);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 400ms ease;
+    }
+
+    .bar-done { background: var(--success); }
+    .bar-progress { background: var(--accent); }
+    .bar-pending { background: var(--warning); }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .timeline {
+      margin-bottom: 32px;
+    }
+
+    .timeline h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .milestone-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .milestone {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .milestone-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .icon-done { background: var(--success-subtle); color: var(--success); }
+    .icon-progress { background: var(--accent-subtle); color: var(--accent); }
+    .icon-pending { background: var(--bg-surface); color: var(--text-tertiary); }
+
+    .milestone-content {
+      flex: 1;
+    }
+
+    .milestone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .milestone-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .milestone-date {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-tertiary);
+    }
+
+    .milestone-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .blockers {
+      background: var(--error-subtle);
+      border: 1px solid var(--error);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+
+    .blockers h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--error);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .blockers ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .blockers li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .blockers li::before {
+      content: '!';
+      position: absolute;
+      left: 0;
+      color: var(--error);
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--error);
+      color: white;
+      border-radius: 50%;
+      font-size: 10px;
+    }
+
+    .next-up {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .next-up h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .next-up ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .next-up li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding-left: 24px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .next-up li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Status</h1>
+      <p>Live project status — Feb 15, 2026. V3 MCP Server is live with mock data. 21 tools, 96% coverage validated. Real data integration in progress.</p>
+    </div>
+
+    <div class="status-hero">
+      <div class="status-hero-label">Current Phase</div>
+      <div class="status-hero-value">V3 Live</div>
+      <div class="status-hero-desc">MCP Server operational with 21 tools (mock data). Real data integration: Feb 20-27.</div>
+    </div>
+
+    <div class="progress-grid">
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">MCP Server</div>
+          <div class="progress-badge badge-done">DONE</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-done" style="width: 100%"></div>
+        </div>
+        <div class="progress-text">21 tools built, tested, and operational</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Mock Data</div>
+          <div class="progress-badge badge-done">DONE</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-done" style="width: 100%"></div>
+        </div>
+        <div class="progress-text">18 companies with realistic data</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Coverage Test</div>
+          <div class="progress-badge badge-done">DONE</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-done" style="width: 96%"></div>
+        </div>
+        <div class="progress-text">48/50 questions answered (96%)</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Younium Integration</div>
+          <div class="progress-badge badge-progress">IN PROGRESS</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-progress" style="width: 40%"></div>
+        </div>
+        <div class="progress-text">API keys secured, schema mapped</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">PostHog Integration</div>
+          <div class="progress-badge badge-pending">PENDING</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-pending" style="width: 20%"></div>
+        </div>
+        <div class="progress-text">Awaiting API credentials from team</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Garba Integration</div>
+          <div class="progress-badge badge-progress">IN PROGRESS</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-progress" style="width: 60%"></div>
+        </div>
+        <div class="progress-text">API validated, domain mapping in progress</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Supabase Setup</div>
+          <div class="progress-badge badge-pending">PENDING</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-pending" style="width: 0%"></div>
+        </div>
+        <div class="progress-text">Not started — waiting for data integrations</div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-name">Stakeholder Demo</div>
+          <div class="progress-badge badge-pending">PENDING</div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar bar-pending" style="width: 10%"></div>
+        </div>
+        <div class="progress-text">Scheduled for March 3</div>
+      </div>
+    </div>
+
+    <div class="blockers">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1l7 12H1z"/><line x1="8" y1="6" x2="8" y2="9"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
+        Active Blockers
+      </h3>
+      <ul>
+        <li><strong>PostHog API Credentials:</strong> Need project API key from Product team to pull usage data.</li>
+        <li><strong>Younium API Rate Limits:</strong> Need to confirm rate limits for batch sync (1,376 subscriptions).</li>
+        <li><strong>Domain→Org_nr Mapping:</strong> Garba returns domains, not org_nr. Building mapping table via Bolagsfakta.</li>
+      </ul>
+    </div>
+
+    <div class="timeline">
+      <h2>Timeline</h2>
+      <div class="milestone-list">
+        <div class="milestone">
+          <div class="milestone-icon icon-done">✓</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">V3 MCP Server Live (Mock Data)</div>
+              <div class="milestone-date">Feb 14, 2026</div>
+            </div>
+            <div class="milestone-desc">21 tools operational, 96% coverage validated, stakeholders can test with mock data in Claude.ai.</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-icon icon-progress">→</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">Younium + PostHog Live</div>
+              <div class="milestone-date">Feb 20, 2026</div>
+            </div>
+            <div class="milestone-desc">Real subscription and usage data integrated. Replaces mock data for billing and product analytics.</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-icon icon-pending">○</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">Garba + Domain Mapping Live</div>
+              <div class="milestone-date">Feb 24, 2026</div>
+            </div>
+            <div class="milestone-desc">Meeting transcripts and MEDDIC insights integrated. Domain→org_nr mapping table operational.</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-icon icon-pending">○</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">All 7 Sources Live</div>
+              <div class="milestone-date">Feb 27, 2026</div>
+            </div>
+            <div class="milestone-desc">Procurement + Company Groups + HubSpot + Postmark integrated. 96% coverage re-validated with real data.</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-icon icon-pending">○</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">Stakeholder Demo</div>
+              <div class="milestone-date">March 3, 2026</div>
+            </div>
+            <div class="milestone-desc">Live demo with Jens, Hugo, Oskar. Show real customer data, answer their questions, validate workflows.</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-icon icon-pending">○</div>
+          <div class="milestone-content">
+            <div class="milestone-header">
+              <div class="milestone-name">V1 Handoff</div>
+              <div class="milestone-date">March 6, 2026</div>
+            </div>
+            <div class="milestone-desc">Full handoff to Jens (Engineering Driver). Documentation, runbook, auth setup guide, and deployment to production.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-up">
+      <h3>Next 7 Days (Feb 15-22)</h3>
+      <ul>
+        <li><strong>Younium integration:</strong> Pull all 1,376 subscriptions, map to org_nr, sync ARR/MRR/plan tier data.</li>
+        <li><strong>PostHog integration:</strong> Pull usage events, aggregate by org_nr, calculate health scores.</li>
+        <li><strong>Domain mapping table:</strong> Build domain→org_nr lookup using Younium emails + Bolagsfakta API.</li>
+        <li><strong>Supabase setup:</strong> Provision Postgres database, define schema, set up sync scripts.</li>
+        <li><strong>Test with real data:</strong> Re-run 50-question stress test with live Younium + PostHog data.</li>
+      </ul>
+    </div>
+
+  </div>
+
+</body>
+</html>

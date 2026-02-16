@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V1 — Customer Graph App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    /* ================================================================
+       CSS Custom Properties — Linear-inspired design system
+    ================================================================ */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --surface-hover: #E2E4E7;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.10);
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.08);
+      --purple: #7C3AED;
+      --warning: #D97706;
+      --error: #DC2626;
+      --radius: 6px;
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #111114;
+      --surface-bg: #18181C;
+      --surface-hover: #1F1F24;
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --success: #4ADE80;
+      --purple: #A78BFA;
+      --warning: #FBBF24;
+      --error: #F87171;
+    }
+
+    /* ================================================================
+       Reset & Base
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* ================================================================
+       Mockup Container
+    ================================================================ */
+    .mockup-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: var(--surface-bg);
+      padding: 40px;
+    }
+
+    .mockup-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .mockup-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .mockup-header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .mockup-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--accent-subtle);
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* ================================================================
+       V1 Mockup (scaled up for full-screen)
+    ================================================================ */
+    .mockup-v1 {
+      flex: 1;
+      background: var(--base-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .m-topbar {
+      height: 48px;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+    }
+
+    .m-search-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--text-tertiary);
+    }
+
+    .m-search {
+      flex: 1;
+      height: 28px;
+      background: var(--surface-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+
+    .m-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .m-tab {
+      height: 40px;
+      padding: 0 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 120ms ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .m-tab:hover {
+      color: var(--text-secondary);
+      background: var(--surface-bg);
+    }
+
+    .m-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .m-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .m-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 120ms ease;
+    }
+
+    .m-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .m-card-title {
+      height: 14px;
+      width: 60%;
+      background: var(--text-tertiary);
+      border-radius: 4px;
+      opacity: 0.3;
+    }
+
+    .m-card-value {
+      height: 32px;
+      width: 50%;
+      background: var(--accent);
+      border-radius: 6px;
+      opacity: 0.6;
+    }
+
+    .m-card-bar {
+      height: 8px;
+      width: 100%;
+      background: var(--surface-bg);
+      border-radius: 4px;
+      margin-top: auto;
+      overflow: hidden;
+    }
+
+    .m-card-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--success);
+      opacity: 0.7;
+      transition: width 300ms ease;
+    }
+
+    /* ================================================================
+       Theme Toggle
+    ================================================================ */
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 120ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--surface-bg);
+      transform: scale(1.05);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ================================================================
+       Responsive
+    ================================================================ */
+    @media (max-width: 1024px) {
+      .m-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mockup-container {
+        padding: 20px;
+      }
+      .m-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mockup-container">
+    <div class="mockup-header">
+      <span class="mockup-badge">V1 — Concept</span>
+      <h1>Customer Graph App</h1>
+      <p>Traditional Next.js dashboard with search, tabbed customer profiles, and pre-built views.</p>
+    </div>
+
+    <div class="mockup-v1">
+      <div class="m-topbar">
+        <svg class="m-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="7" cy="7" r="4"/>
+          <path d="M10 10l3 3"/>
+        </svg>
+        <div class="m-search">Search customers, companies, or procurement awards...</div>
+      </div>
+
+      <div class="m-tabs">
+        <button class="m-tab active">Overview</button>
+        <button class="m-tab">Billing</button>
+        <button class="m-tab">Usage</button>
+        <button class="m-tab">Meetings</button>
+        <button class="m-tab">Pipeline</button>
+      </div>
+
+      <div class="m-content">
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:70%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--success);width:55%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--purple);width:50%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:45%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="width:65%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:60%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--warning);width:40%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:35%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--error);width:50%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:55%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="width:60%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:75%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--success);width:45%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-title"></div>
+          <div class="m-card-value" style="background:var(--purple);width:55%"></div>
+          <div class="m-card-bar"><div class="m-card-bar-fill" style="width:50%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+    <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="8" cy="8" r="3"/>
+      <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none">
+      <path d="M13.2 10.5A5.5 5.5 0 015.5 2.8a5.5 5.5 0 107.7 7.7z"/>
+    </svg>
+  </button>
+
+  <script>
+    // Theme
+    var root = document.documentElement;
+    function getSystemTheme() { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      var sun = document.querySelector('.icon-sun');
+      var moon = document.querySelector('.icon-moon');
+      if (sun && moon) {
+        sun.style.display = theme === 'dark' ? 'none' : 'block';
+        moon.style.display = theme === 'dark' ? 'block' : 'none';
+      }
+    }
+    var saved = localStorage.getItem('build-hub-theme');
+    applyTheme(saved || getSystemTheme());
+
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var current = root.getAttribute('data-theme') || getSystemTheme();
+      var next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('build-hub-theme', next);
+      applyTheme(next);
+    });
+
+    // Tab interactions
+    var tabs = document.querySelectorAll('.m-tab');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V1 Demo — Customer Graph App</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .error-container {
+      display: none;
+      height: 100%;
+      background: #0A0A0B;
+      color: #EDEDEF;
+      padding: 48px 24px;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .error-container.show {
+      display: flex;
+    }
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .error-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .error-message {
+      font-size: 14px;
+      color: #8B8B96;
+      line-height: 1.6;
+      max-width: 400px;
+      margin-bottom: 16px;
+    }
+    .error-code {
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #5C5C66;
+      background: #1B1B1F;
+      padding: 12px 16px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="demo-iframe" src="http://localhost:3000" title="V1 Demo - Customer Graph App"></iframe>
+
+  <div class="error-container" id="error-container">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">V1 Demo Not Running</div>
+    <div class="error-message">
+      The V1 prototype server is not running on localhost:3000. Start it to view the demo.
+    </div>
+    <div class="error-code">cd customer-graph && npm run dev</div>
+  </div>
+
+  <script>
+    var iframe = document.getElementById('demo-iframe');
+    var errorContainer = document.getElementById('error-container');
+    var checkTimeout;
+
+    // Check if iframe loads successfully
+    iframe.addEventListener('load', function() {
+      clearTimeout(checkTimeout);
+      errorContainer.classList.remove('show');
+    });
+
+    iframe.addEventListener('error', function() {
+      errorContainer.classList.add('show');
+    });
+
+    // Fallback check after 5 seconds
+    checkTimeout = setTimeout(function() {
+      try {
+        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc || iframeDoc.readyState !== 'complete') {
+          errorContainer.classList.add('show');
+        }
+      } catch (e) {
+        // Cross-origin error means it loaded successfully
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

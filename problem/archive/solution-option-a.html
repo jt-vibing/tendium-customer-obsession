@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option A — Before/After Split</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --success: #10B981;
+      --success-subtle: rgba(16,185,129,0.10);
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 48px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .option-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    /* Before/After Grid */
+    .before-after-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .before-after-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .before-after-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+
+    .before-after-card--before::before {
+      background: var(--error);
+    }
+
+    .before-after-card--after::before {
+      background: var(--success);
+    }
+
+    .before-after-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .before-after-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .before-after-item {
+      font-size: 14px;
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .before-after-item::before {
+      content: '×';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
+
+    .before-after-card--before .before-after-item::before {
+      color: var(--error);
+    }
+
+    .before-after-card--after .before-after-item::before {
+      content: '✓';
+      color: var(--success);
+    }
+
+    /* Hypothesis Box */
+    .hypothesis-box {
+      background: var(--accent-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hypothesis-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .hypothesis-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 640px) {
+      .before-after-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="option-badge">Option A — Before/After</div>
+    <h1>Solution</h1>
+
+    <div class="before-after-grid">
+      <div class="before-after-card before-after-card--before">
+        <div class="before-after-title">Today</div>
+        <div class="before-after-items">
+          <div class="before-after-item">15+ fragmented tools</div>
+          <div class="before-after-item">30 min to prep for call</div>
+          <div class="before-after-item">"Is this number right?"</div>
+          <div class="before-after-item">Building spreadsheets</div>
+          <div class="before-after-item">Days to answer questions</div>
+          <div class="before-after-item">MQL ≠ MQL confusion</div>
+        </div>
+      </div>
+
+      <div class="before-after-card before-after-card--after">
+        <div class="before-after-title">With Customer Graph</div>
+        <div class="before-after-items">
+          <div class="before-after-item">1 unified view</div>
+          <div class="before-after-item">30 sec to get brief</div>
+          <div class="before-after-item">Click → verify source</div>
+          <div class="before-after-item">Ask in plain English</div>
+          <div class="before-after-item">Instant answers</div>
+          <div class="before-after-item">Aligned definitions</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hypothesis-box">
+      <div class="hypothesis-label">Falsifiable Hypothesis</div>
+      <div class="hypothesis-text">If we eliminate fractured data, conflicting definitions, and data silos in one searchable view — teams will decide in minutes instead of days, stop building spreadsheets, and take action immediately.</div>
+    </div>
+  </div>
+</body>
+</html>

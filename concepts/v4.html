@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Intelligence OS — Tendium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0B;
+      --bg-elevated: #111114;
+      --bg-surface: #18181C;
+      --bg-surface-hover: #1F1F24;
+      --bg-surface-active: #26262C;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --orange: #FB923C;
+      --orange-subtle: rgba(251,146,60,0.12);
+      --radius: 6px;
+      --radius-lg: 10px;
+      --radius-xl: 14px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── App Shell ── */
+    .app {
+      display: grid;
+      grid-template-columns: 56px 1fr 380px;
+      height: 100vh;
+    }
+
+    .app.copilot-closed {
+      grid-template-columns: 56px 1fr 0px;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo svg { width: 16px; height: 16px; }
+
+    .sidebar-item {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.12s ease;
+      position: relative;
+    }
+
+    .sidebar-item:hover { color: var(--text-secondary); background: var(--bg-surface); }
+    .sidebar-item.active {
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+    }
+
+    .sidebar-item.active::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item svg { width: 18px; height: 18px; }
+
+    .sidebar-spacer { flex: 1; }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Main Content ── */
+    .main {
+      background: var(--bg-elevated);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--bg-surface-active) transparent;
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+    }
+
+    .main-header h1 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .main-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cmd-k-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      color: var(--text-tertiary);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .cmd-k-btn:hover { color: var(--text-secondary); border-color: var(--border-strong); }
+
+    .cmd-k-btn kbd {
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 4px;
+      background: var(--bg-surface-active);
+      border-radius: 3px;
+    }
+
+    .main-body { padding: 24px 28px; }
+
+    /* ── KPI Row ── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .kpi-delta {
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .kpi-delta.up { color: var(--success-text); }
+    .kpi-delta.down { color: var(--error-text); }
+    .kpi-delta.neutral { color: var(--text-tertiary); }
+
+    /* ── Sparkline (CSS-only mini bars) ── */
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 24px;
+      margin-top: 8px;
+    }
+    .sparkline .bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      transition: height 0.3s ease;
+    }
+
+    /* ── Two-column grid ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Panel Card ── */
+    .panel-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .panel-card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-card-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-card-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .panel-card-body { padding: 12px 16px; }
+
+    /* ── Health Heatmap ── */
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1.6;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .heatmap-cell:hover { transform: scale(1.05); }
+
+    .heatmap-cell .cell-name {
+      font-size: 9px;
+      font-weight: 500;
+      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    .heatmap-cell .cell-score { font-size: 13px; font-weight: 700; }
+
+    .health-strong { background: rgba(74,222,128,0.15); color: var(--success-text); }
+    .health-moderate { background: rgba(251,191,36,0.12); color: var(--warning-text); }
+    .health-at-risk { background: rgba(248,113,113,0.12); color: var(--error-text); }
+
+    /* ── Renewal Timeline ── */
+    .renewal-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .renewal-row:last-child { border-bottom: none; }
+
+    .renewal-days {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      width: 40px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .renewal-bar-wrapper {
+      flex: 1;
+      height: 20px;
+      background: var(--bg-surface-active);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .renewal-bar {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+    }
+
+    .renewal-bar span {
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .renewal-arr {
+      font-size: 11px;
+      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-secondary);
+      width: 60px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── Alert Feed ── */
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .alert-item:last-child { border-bottom: none; }
+
+    .alert-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .alert-dot.critical { background: var(--error); }
+    .alert-dot.warning { background: var(--warning); }
+    .alert-dot.info { background: var(--accent); }
+
+    .alert-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .alert-text strong { color: var(--text-primary); font-weight: 600; }
+
+    .alert-time {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ── Copilot Panel ── */
+    .copilot {
+      background: var(--bg);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.2s ease;
+    }
+
+    .app.copilot-closed .copilot { display: none; }
+
+    .copilot-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .copilot-header h2 {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copilot-header h2 .ai-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .copilot-close {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .copilot-close:hover { color: var(--text-secondary); background: var(--bg-surface); }
+    .copilot-close svg { width: 14px; height: 14px; }
+
+    .copilot-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .copilot-context {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding: 8px 10px;
+      background: var(--bg-surface);
+      border-radius: var(--radius);
+      border-left: 2px solid var(--accent);
+    }
+
+    .copilot-msg {
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+    }
+
+    .copilot-msg.ai {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+    }
+
+    .copilot-msg.ai strong { color: var(--text-primary); }
+
+    .copilot-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .copilot-suggestion {
+      font-size: 12px;
+      font-family: inherit;
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.12s ease;
+    }
+
+    .copilot-suggestion:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+    }
+
+    .copilot-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .copilot-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-primary);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.12s ease;
+    }
+
+    .copilot-input::placeholder { color: var(--text-tertiary); }
+    .copilot-input:focus { border-color: var(--accent); }
+
+    /* ── Mockup Banner ── */
+    .mockup-banner {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(12px);
+    }
+
+    .mockup-banner .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4"/></svg>
+    </div>
+
+    <div class="sidebar-item active" title="Pulse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div class="sidebar-item" title="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <div class="sidebar-item" title="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="sidebar-item" title="Segments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    </div>
+    <div class="sidebar-item" title="Renewals">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    </div>
+    <div class="sidebar-item" title="Risks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="sidebar-item" title="Action Log">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-item" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════ MAIN CONTENT ══════════════ -->
+  <main class="main">
+    <div class="main-header">
+      <h1>Pulse</h1>
+      <div class="main-header-right">
+        <span style="font-size: 11px; color: var(--text-tertiary);">Feb 14, 2026</span>
+        <button class="cmd-k-btn" onclick="toggleCopilot()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4"/></svg>
+          Ask AI
+          <kbd>&#8984;K</kbd>
+        </button>
+      </div>
+    </div>
+
+    <div class="main-body">
+
+      <!-- KPI Cards -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Total ARR</div>
+          <div class="kpi-value">2.8M <span style="font-size: 14px; color: var(--text-tertiary);">SEK</span></div>
+          <div class="kpi-delta up">
+            <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1L9 6H1z" fill="currentColor"/></svg>
+            +12.4% vs prev
+          </div>
+          <div class="sparkline">
+            <div class="bar" style="height:50%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:55%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:48%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:60%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:65%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:58%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:72%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:78%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:82%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:90%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:88%; background: var(--accent-subtle);"></div>
+            <div class="bar" style="height:100%; background: var(--accent);"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active Customers</div>
+          <div class="kpi-value">15</div>
+          <div class="kpi-delta down">
+            <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 9L1 4h8z" fill="currentColor"/></svg>
+            3 churned
+          </div>
+          <div class="sparkline">
+            <div class="bar" style="height:100%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:100%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:95%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:95%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:90%; background: var(--warning-subtle);"></div>
+            <div class="bar" style="height:85%; background: var(--warning-subtle);"></div>
+            <div class="bar" style="height:85%; background: var(--warning-subtle);"></div>
+            <div class="bar" style="height:83%; background: var(--warning-subtle);"></div>
+            <div class="bar" style="height:83%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:83%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:83%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:83%; background: var(--success);"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">NRR</div>
+          <div class="kpi-value">112.1<span style="font-size: 14px; color: var(--text-tertiary);">%</span></div>
+          <div class="kpi-delta up">
+            <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1L9 6H1z" fill="currentColor"/></svg>
+            Healthy
+          </div>
+          <div class="sparkline">
+            <div class="bar" style="height:70%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:75%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:72%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:80%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:78%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:85%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:82%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:88%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:90%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:92%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:95%; background: var(--success-subtle);"></div>
+            <div class="bar" style="height:100%; background: var(--success);"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">At-Risk Accounts</div>
+          <div class="kpi-value" style="color: var(--error-text);">6</div>
+          <div class="kpi-delta down">
+            <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 9L1 4h8z" fill="currentColor"/></svg>
+            469K SEK at stake
+          </div>
+          <div class="sparkline">
+            <div class="bar" style="height:30%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:35%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:40%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:35%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:45%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:50%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:55%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:60%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:55%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:65%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:70%; background: var(--error-subtle);"></div>
+            <div class="bar" style="height:75%; background: var(--error);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-column panels -->
+      <div class="grid-2">
+
+        <!-- Health Heatmap -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <span class="panel-card-title">Customer Health</span>
+            <span class="panel-card-badge" style="background: var(--bg-surface-active); color: var(--text-secondary);">15 active</span>
+          </div>
+          <div class="panel-card-body">
+            <div class="heatmap-grid">
+              <div class="heatmap-cell health-strong"><span class="cell-score">85</span><span class="cell-name">Stockholm</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">80</span><span class="cell-name">Vattenfall</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">80</span><span class="cell-name">Gothenburg</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">75</span><span class="cell-name">Securitas</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">75</span><span class="cell-name">ASSA ABLOY</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">75</span><span class="cell-name">Bonnier</span></div>
+              <div class="heatmap-cell health-strong"><span class="cell-score">70</span><span class="cell-name">Uppsala</span></div>
+              <div class="heatmap-cell health-moderate"><span class="cell-score">60</span><span class="cell-name">Volvo</span></div>
+              <div class="heatmap-cell health-moderate"><span class="cell-score">55</span><span class="cell-name">Malmo</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">35</span><span class="cell-name">Ericsson</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">30</span><span class="cell-name">Telia</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">25</span><span class="cell-name">Adlibris</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">15</span><span class="cell-name">Linkoping</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">10</span><span class="cell-name">Klarna</span></div>
+              <div class="heatmap-cell health-at-risk"><span class="cell-score">0</span><span class="cell-name">SKF</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Renewal Pipeline -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <span class="panel-card-title">Renewal Pipeline</span>
+            <span class="panel-card-badge" style="background: var(--error-subtle); color: var(--error-text);">2 critical</span>
+          </div>
+          <div class="panel-card-body">
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--error-text);">29d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 16%; background: var(--error-subtle);"><span style="color: var(--error-text);">Adlibris</span></div>
+              </div>
+              <div class="renewal-arr">85K</div>
+            </div>
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--warning-text);">46d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 75%; background: var(--success-subtle);"><span style="color: var(--success-text);">Vattenfall</span></div>
+              </div>
+              <div class="renewal-arr">410K</div>
+            </div>
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--warning-text);">46d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 20%; background: var(--warning-subtle);"><span style="color: var(--warning-text);">ASSA ABLOY</span></div>
+              </div>
+              <div class="renewal-arr">110K</div>
+            </div>
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--warning-text);">76d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 50%; background: var(--success-subtle);"><span style="color: var(--success-text);">Securitas</span></div>
+              </div>
+              <div class="renewal-arr">275K</div>
+            </div>
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--warning-text);">76d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 17%; background: var(--success-subtle);"><span style="color: var(--success-text);">Bonnier</span></div>
+              </div>
+              <div class="renewal-arr">95K</div>
+            </div>
+            <div class="renewal-row">
+              <div class="renewal-days" style="color: var(--text-tertiary);">107d</div>
+              <div class="renewal-bar-wrapper">
+                <div class="renewal-bar" style="width: 18%; background: var(--error-subtle);"><span style="color: var(--error-text);">SKF</span></div>
+              </div>
+              <div class="renewal-arr">95K</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Feed -->
+      <div class="panel-card">
+        <div class="panel-card-header">
+          <span class="panel-card-title">Recent Signals</span>
+          <span class="panel-card-badge" style="background: var(--error-subtle); color: var(--error-text);">3 critical</span>
+        </div>
+        <div class="panel-card-body">
+          <div class="alert-item">
+            <div class="alert-dot critical"></div>
+            <div>
+              <div class="alert-text"><strong>SKF AB</strong> health score dropped to 0. Main contact on parental leave. Only 6 logins in 30 days. Renewal in 107 days.</div>
+              <div class="alert-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot critical"></div>
+            <div>
+              <div class="alert-text"><strong>Adlibris AB</strong> renewal in 29 days with health at 25. Champion left role. Evaluating alternatives.</div>
+              <div class="alert-time">4 hours ago</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot warning"></div>
+            <div>
+              <div class="alert-text"><strong>Klarna AB</strong> barely using Light plan. Procurement deprioritized due to cost-cutting. 4 logins in 30 days.</div>
+              <div class="alert-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot info"></div>
+            <div>
+              <div class="alert-text"><strong>Gothenburg Municipality</strong> wants to expand to 80+ seats. Budget decision in March council meeting.</div>
+              <div class="alert-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot info"></div>
+            <div>
+              <div class="alert-text"><strong>Securitas AB</strong> interested in Intelligence add-on + European expansion (France, Spain). ROI 4:1.</div>
+              <div class="alert-time">3 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════════ COPILOT PANEL ══════════════ -->
+  <aside class="copilot">
+    <div class="copilot-header">
+      <h2><span class="ai-dot"></span> Copilot</h2>
+      <button class="copilot-close" onclick="toggleCopilot()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="copilot-body">
+      <div class="copilot-context">
+        Viewing <strong>Pulse</strong> &mdash; 15 active customers, 2.8M SEK ARR, 6 at-risk accounts
+      </div>
+
+      <div class="copilot-msg ai">
+        <strong>3 things that need attention this week:</strong><br><br>
+        1. <strong>Adlibris</strong> renews in 29 days with health at 25. New contact Erik needs a demo.<br>
+        2. <strong>SKF</strong> has zero engagement. Contact on leave until April. Find a backup.<br>
+        3. <strong>Gothenburg</strong> budget decision in March &mdash; prep the 80-seat proposal now.
+      </div>
+
+      <div class="copilot-suggestions">
+        <button class="copilot-suggestion">Brief me for my call with Adlibris</button>
+        <button class="copilot-suggestion">Who's at risk of churning?</button>
+        <button class="copilot-suggestion">What's our NRR breakdown?</button>
+        <button class="copilot-suggestion">Draft a check-in email for SKF</button>
+      </div>
+    </div>
+
+    <div class="copilot-input-area">
+      <input class="copilot-input" type="text" placeholder="Ask about your customers..." />
+    </div>
+  </aside>
+
+</div>
+
+<!-- Mockup Banner -->
+<div class="mockup-banner">
+  <span class="dot"></span>
+  V4 Concept &mdash; Visual Dashboards + MCP Data Layer &mdash; Note: "Copilot" panel = Claude.ai access (not custom UI)
+</div>
+
+<script>
+  function toggleCopilot() {
+    document.getElementById('app').classList.toggle('copilot-closed');
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      toggleCopilot();
+    }
+  });
+</script>
+
+</body>
+</html>

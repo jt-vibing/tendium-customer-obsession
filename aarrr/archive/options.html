@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AARRR Journey — Visual Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    var theme = localStorage.getItem('build-hub-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'theme-change') {
+        document.documentElement.setAttribute('data-theme', e.data.theme);
+      }
+    });
+  </script>
+  <style>
+    /* ================================================================
+       Design System — Linear-inspired (shared)
+       ================================================================ */
+    :root {
+      --base-bg: #FFFFFF;
+      --elevated-bg: #F7F8F8;
+      --surface-bg: #ECEEF0;
+      --hover: rgba(0,0,0,0.04);
+      --active: rgba(0,0,0,0.06);
+      --text-primary: #171717;
+      --text-secondary: #6B6B76;
+      --text-tertiary: #A1A1A6;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.12);
+      --accent: #5E6AD2;
+      --accent-subtle: rgba(94,106,210,0.12);
+      --accent-text: #4F5BC4;
+      --success: #16A34A;
+      --success-subtle: rgba(22,163,74,0.10);
+      --success-text: #15803D;
+      --warning: #D97706;
+      --warning-subtle: rgba(217,119,6,0.10);
+      --warning-text: #B45309;
+      --error: #DC2626;
+      --error-subtle: rgba(220,38,38,0.08);
+      --error-text: #B91C1C;
+      --purple: #7C3AED;
+      --purple-subtle: rgba(124,58,237,0.10);
+      --purple-text: #6D28D9;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --base-bg: #0A0A0B;
+      --elevated-bg: #131316;
+      --surface-bg: #1B1B1F;
+      --hover: rgba(255,255,255,0.04);
+      --active: rgba(255,255,255,0.06);
+      --text-primary: #EDEDEF;
+      --text-secondary: #8B8B96;
+      --text-tertiary: #5C5C66;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.10);
+      --accent: #7B83EB;
+      --accent-subtle: rgba(123,131,235,0.14);
+      --accent-text: #9BA2F5;
+      --success: #4ADE80;
+      --success-subtle: rgba(74,222,128,0.12);
+      --success-text: #86EFAC;
+      --warning: #FBBF24;
+      --warning-subtle: rgba(251,191,36,0.12);
+      --warning-text: #FCD34D;
+      --error: #F87171;
+      --error-subtle: rgba(248,113,113,0.10);
+      --error-text: #FCA5A5;
+      --purple: #A78BFA;
+      --purple-subtle: rgba(167,139,250,0.12);
+      --purple-text: #C4B5FD;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--base-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ================================================================
+       Header
+       ================================================================ */
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 720px;
+      margin-bottom: 48px;
+    }
+
+    /* ================================================================
+       Option Section
+       ================================================================ */
+    .option-section {
+      margin-bottom: 64px;
+    }
+
+    .option-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 12px;
+    }
+
+    .option-label--a {
+      color: var(--accent-text);
+      background: var(--accent-subtle);
+    }
+    .option-label--b {
+      color: var(--success-text);
+      background: var(--success-subtle);
+    }
+    .option-label--c {
+      color: var(--purple-text);
+      background: var(--purple-subtle);
+    }
+
+    .option-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .option-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .option-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 64px;
+    }
+
+    /* ================================================================
+       Health Badges (shared)
+       ================================================================ */
+    .health {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .health--fragmented { background: var(--error-subtle); color: var(--error-text); }
+    .health--best       { background: var(--success-subtle); color: var(--success-text); }
+    .health--mixed      { background: var(--warning-subtle); color: var(--warning-text); }
+    .health--clean      { background: var(--accent-subtle); color: var(--accent-text); }
+    .health--under      { background: var(--warning-subtle); color: var(--warning-text); }
+
+    .health-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .health--fragmented .health-dot { background: var(--error); }
+    .health--best .health-dot       { background: var(--success); }
+    .health--mixed .health-dot      { background: var(--warning); }
+    .health--clean .health-dot      { background: var(--accent); }
+    .health--under .health-dot      { background: var(--warning); }
+
+    /* ================================================================
+       Procurement Banner (shared)
+       ================================================================ */
+    .pd-banner {
+      background: var(--purple-subtle);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--purple-text);
+    }
+
+    .pd-banner__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+
+    .pd-banner strong { font-weight: 700; }
+
+    /* ================================================================
+       OPTION A — Stage Cards (Horizontal)
+       ================================================================ */
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .stage-card {
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stage-card__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .stage-card__name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .stage-card__question {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .stage-card__state {
+      font-size: 12px;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .stage-card__gap {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-strong);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--error-text);
+      line-height: 1.5;
+    }
+
+    [data-theme="dark"] .stage-card__gap {
+      color: var(--error-text);
+    }
+
+    .pd-band {
+      background: linear-gradient(90deg, var(--purple-subtle) 0%, rgba(124,58,237,0.04) 50%, var(--purple-subtle) 100%);
+      border: 1px solid rgba(124,58,237,0.12);
+      border-radius: var(--radius);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--purple-text);
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .pd-band__line {
+      flex: 1;
+      height: 2px;
+      background: var(--purple);
+      opacity: 0.25;
+      border-radius: 1px;
+    }
+
+    .pd-band__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+
+    /* ================================================================
+       OPTION B — Journey Scorecard (Grid)
+       ================================================================ */
+    .scorecard {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--elevated-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .scorecard th {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      background: var(--surface-bg);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scorecard td {
+      font-size: 13px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .scorecard tr:last-child td {
+      border-bottom: none;
+    }
+
+    .scorecard .col-stage {
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      width: 100px;
+    }
+
+    .scorecard .col-what {
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .scorecard .col-gap {
+      color: var(--error-text);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .scorecard .col-priority {
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .priority-high { color: var(--error-text); }
+    .priority-med  { color: var(--warning-text); }
+    .priority-low  { color: var(--text-tertiary); }
+
+    /* ================================================================
+       OPTION C — Narrative Flow (Vertical)
+       ================================================================ */
+    .narrative {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .narrative::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 28px;
+      bottom: 28px;
+      width: 2px;
+      background: var(--border-strong);
+      border-radius: 1px;
+    }
+
+    .narr-stage {
+      position: relative;
+      padding: 0 0 40px;
+    }
+
+    .narr-stage:last-child {
+      padding-bottom: 0;
+    }
+
+    .narr-dot {
+      position: absolute;
+      left: -32px;
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      background: var(--base-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .narr-dot__inner {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .narr-dot--red .narr-dot__inner    { background: var(--error); }
+    .narr-dot--green .narr-dot__inner  { background: var(--success); }
+    .narr-dot--yellow .narr-dot__inner { background: var(--warning); }
+    .narr-dot--blue .narr-dot__inner   { background: var(--accent); }
+
+    .narr-dot--red    { border-color: var(--error); }
+    .narr-dot--green  { border-color: var(--success); }
+    .narr-dot--yellow { border-color: var(--warning); }
+    .narr-dot--blue   { border-color: var(--accent); }
+
+    .narr-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .narr-name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .narr-story {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 640px;
+      margin-bottom: 10px;
+    }
+
+    .narr-break {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--error-text);
+      background: var(--error-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius);
+    }
+
+    .narr-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success-text);
+      background: var(--success-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius);
+    }
+
+    /* ================================================================
+       Footer
+       ================================================================ */
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    .page-footer span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* ================================================================
+       Responsive
+       ================================================================ */
+    @media (max-width: 768px) {
+      .page { padding: 28px 16px 60px; }
+      .header-title { font-size: 24px; }
+
+      .cards-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .scorecard { font-size: 12px; }
+      .scorecard th, .scorecard td { padding: 8px 10px; }
+
+      .page-footer {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <header>
+      <div class="header-badge">AARRR Journey</div>
+      <h1 class="header-title">Journey Visualization &mdash; Pick One</h1>
+      <p class="header-subtitle">Three ways to tell the same story: where the customer journey works, where it breaks, and why Procurement Data is the thread that holds it together.</p>
+    </header>
+
+    <!-- ============================================================
+         OPTION A — Stage Cards (Horizontal)
+         ============================================================ -->
+    <section class="option-section">
+      <div class="option-label option-label--a">Option A</div>
+      <h2 class="option-title">Stage Cards</h2>
+      <p class="option-desc">Five stages at a glance. Scan left to right &mdash; see health, state, and gaps in one row.</p>
+
+      <div class="cards-row">
+        <!-- Acquire -->
+        <div class="stage-card">
+          <div class="stage-card__head">
+            <span class="stage-card__name">Acquire</span>
+            <span class="health health--fragmented"><span class="health-dot"></span>Fragmented</span>
+          </div>
+          <div class="stage-card__question">Who&rsquo;s showing up?</div>
+          <div class="stage-card__state">7 overlapping tools. No company-level visitor ID. Website &rarr; prospect is invisible.</div>
+          <div class="stage-card__gap">Gap: visitor &rarr; prospect is a black box</div>
+        </div>
+
+        <!-- Activate -->
+        <div class="stage-card">
+          <div class="stage-card__head">
+            <span class="stage-card__name">Activate</span>
+            <span class="health health--best"><span class="health-dot"></span>Best</span>
+          </div>
+          <div class="stage-card__question">Are they getting value?</div>
+          <div class="stage-card__state">PostHog tracks trial &rarr; paid. Postmark measures digest engagement. Cleanest stage.</div>
+          <div class="stage-card__gap" style="color: var(--success-text); border-color: var(--success);">Covered: fewest tools, clearest signal</div>
+        </div>
+
+        <!-- Retain -->
+        <div class="stage-card">
+          <div class="stage-card__head">
+            <span class="stage-card__name">Retain</span>
+            <span class="health health--mixed"><span class="health-dot"></span>Mixed</span>
+          </div>
+          <div class="stage-card__question">Are they staying?</div>
+          <div class="stage-card__state">Usage trends in PostHog, email in Postmark, support tickets in HubSpot &mdash; not connected.</div>
+          <div class="stage-card__gap">Gap: no unified churn signal</div>
+        </div>
+
+        <!-- Revenue -->
+        <div class="stage-card">
+          <div class="stage-card__head">
+            <span class="stage-card__name">Revenue</span>
+            <span class="health health--clean"><span class="health-dot"></span>Clean</span>
+          </div>
+          <div class="stage-card__question">Are they paying more?</div>
+          <div class="stage-card__state">Younium = SoT (42M SEK). OneFlow contracts. Fortnox accounting. Solid data, isolated.</div>
+          <div class="stage-card__gap">Gap: revenue data disconnected from usage</div>
+        </div>
+
+        <!-- Referral -->
+        <div class="stage-card">
+          <div class="stage-card__head">
+            <span class="stage-card__name">Referral</span>
+            <span class="health health--under"><span class="health-dot"></span>Under&shy;utilized</span>
+          </div>
+          <div class="stage-card__question">Are they telling others?</div>
+          <div class="stage-card__state">NPS moving to PostHog. HubSpot legacy NPS has low response. No referral program.</div>
+          <div class="stage-card__gap">Gap: no program, no tracking</div>
+        </div>
+      </div>
+
+      <!-- Procurement Data band -->
+      <div class="pd-band">
+        <span class="pd-band__dot"></span>
+        <span class="pd-band__line"></span>
+        <span>Procurement Data &mdash; all 5 stages</span>
+        <span class="pd-band__line"></span>
+        <span class="pd-band__dot"></span>
+      </div>
+    </section>
+
+    <hr class="option-divider">
+
+    <!-- ============================================================
+         OPTION B — Journey Scorecard (Grid)
+         ============================================================ -->
+    <section class="option-section">
+      <div class="option-label option-label--b">Option B</div>
+      <h2 class="option-title">Journey Scorecard</h2>
+      <p class="option-desc">Executive-density grid. One row per stage &mdash; scan down to find the break points.</p>
+
+      <div class="pd-banner">
+        <span class="pd-banner__dot"></span>
+        <strong>Procurement Data</strong> spans all 5 stages &mdash; the only cross-cutting intelligence source.
+      </div>
+
+      <table class="scorecard">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>What&rsquo;s happening</th>
+            <th>Health</th>
+            <th>Gap</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-stage">Acquire</td>
+            <td class="col-what">7 tools, none connected. No company-level visitor identification.</td>
+            <td><span class="health health--fragmented"><span class="health-dot"></span>Fragmented</span></td>
+            <td class="col-gap">Visitor &rarr; prospect is a black box</td>
+            <td class="col-priority priority-high">P0</td>
+          </tr>
+          <tr>
+            <td class="col-stage">Activate</td>
+            <td class="col-what">PostHog trial &rarr; paid + Postmark digest engagement. Clean &amp; focused.</td>
+            <td><span class="health health--best"><span class="health-dot"></span>Best</span></td>
+            <td class="col-gap" style="color: var(--text-tertiary);">&mdash;</td>
+            <td class="col-priority priority-low">Monitor</td>
+          </tr>
+          <tr>
+            <td class="col-stage">Retain</td>
+            <td class="col-what">PostHog usage, Postmark email, HubSpot support &mdash; siloed.</td>
+            <td><span class="health health--mixed"><span class="health-dot"></span>Mixed</span></td>
+            <td class="col-gap">No unified churn signal</td>
+            <td class="col-priority priority-high">P1</td>
+          </tr>
+          <tr>
+            <td class="col-stage">Revenue</td>
+            <td class="col-what">Younium SoT, 42M SEK. OneFlow contracts. Fortnox books.</td>
+            <td><span class="health health--clean"><span class="health-dot"></span>Clean</span></td>
+            <td class="col-gap">Isolated from usage data</td>
+            <td class="col-priority priority-med">P2</td>
+          </tr>
+          <tr>
+            <td class="col-stage">Referral</td>
+            <td class="col-what">NPS moving to PostHog. Legacy HubSpot. No referral program.</td>
+            <td><span class="health health--under"><span class="health-dot"></span>Under</span></td>
+            <td class="col-gap">No program, no tracking</td>
+            <td class="col-priority priority-med">P2</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr class="option-divider">
+
+    <!-- ============================================================
+         OPTION C — Narrative Flow (Vertical)
+         ============================================================ -->
+    <section class="option-section">
+      <div class="option-label option-label--c">Option C</div>
+      <h2 class="option-title">Narrative Flow</h2>
+      <p class="option-desc">The journey told as a story. Follow the line &mdash; see where it flows and where it breaks.</p>
+
+      <div class="pd-banner" style="margin-bottom: 28px;">
+        <span class="pd-banner__dot"></span>
+        <strong>Procurement Data</strong> is the thread woven through every stage &mdash; 80K+ award decisions, the only signal no competitor has.
+      </div>
+
+      <div class="narrative">
+
+        <!-- Acquire -->
+        <div class="narr-stage">
+          <div class="narr-dot narr-dot--red"><span class="narr-dot__inner"></span></div>
+          <div class="narr-head">
+            <span class="narr-name">Acquire</span>
+            <span class="health health--fragmented"><span class="health-dot"></span>Fragmented</span>
+          </div>
+          <p class="narr-story">Someone visits tendium.com. Google Analytics sees a session. Segment fires an event. PostHog logs a pageview. But none of them know <em>which company</em> just showed up. Seven tools watch the door &mdash; nobody knows who walked in.</p>
+          <span class="narr-break">&#9888; Visitor &rarr; prospect is a black box</span>
+        </div>
+
+        <!-- Activate -->
+        <div class="narr-stage">
+          <div class="narr-dot narr-dot--green"><span class="narr-dot__inner"></span></div>
+          <div class="narr-head">
+            <span class="narr-name">Activate</span>
+            <span class="health health--best"><span class="health-dot"></span>Best covered</span>
+          </div>
+          <p class="narr-story">Once they sign up, things click. PostHog tracks trial-to-paid conversion with real product usage data. Postmark measures whether they&rsquo;re opening the tender digest &mdash; the first real value moment. This is Tendium&rsquo;s cleanest stage.</p>
+          <span class="narr-ok">&#10003; Fewest tools, clearest signal</span>
+        </div>
+
+        <!-- Retain -->
+        <div class="narr-stage">
+          <div class="narr-dot narr-dot--yellow"><span class="narr-dot__inner"></span></div>
+          <div class="narr-head">
+            <span class="narr-name">Retain</span>
+            <span class="health health--mixed"><span class="health-dot"></span>Mixed</span>
+          </div>
+          <p class="narr-story">PostHog sees usage drop. Postmark notices fewer opens. HubSpot logs a support ticket. Each system screams &ldquo;churn risk&rdquo; independently &mdash; but nobody triangulates the signals. A customer can go quiet across all three before anyone notices.</p>
+          <span class="narr-break">&#9888; No unified churn signal</span>
+        </div>
+
+        <!-- Revenue -->
+        <div class="narr-stage">
+          <div class="narr-dot narr-dot--blue"><span class="narr-dot__inner"></span></div>
+          <div class="narr-head">
+            <span class="narr-name">Revenue</span>
+            <span class="health health--clean"><span class="health-dot"></span>Clean</span>
+          </div>
+          <p class="narr-story">Younium holds the truth: 42M SEK ARR across 1,376 subscriptions. OneFlow manages contracts. Fortnox handles the books. The data is clean and trustworthy &mdash; but it lives in a vault, disconnected from the usage and engagement signals that predict expansion.</p>
+          <span class="narr-break">&#9888; Revenue data isolated from usage</span>
+        </div>
+
+        <!-- Referral -->
+        <div class="narr-stage">
+          <div class="narr-dot narr-dot--yellow"><span class="narr-dot__inner"></span></div>
+          <div class="narr-head">
+            <span class="narr-name">Referral</span>
+            <span class="health health--under"><span class="health-dot"></span>Underutilized</span>
+          </div>
+          <p class="narr-story">NPS is migrating from HubSpot to PostHog. Response rates are low. There&rsquo;s no referral program, no systematic way to turn happy customers into advocates. The customers winning 82% of their bids should be shouting from the rooftops &mdash; nobody&rsquo;s asking them to.</p>
+          <span class="narr-break">&#9888; No program, no tracking</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>AARRR Journey &mdash; Options Preview</span>
+      <span>Feb 12, 2026 &middot; Pick one to replace the data map</span>
+    </footer>
+
+  </div>
+</body>
+</html>
